@@ -1,0 +1,411 @@
+{
+  "version": 1,
+  "units": "metres",
+  "room": {
+    "width": 5.86999859041066,
+    "depth": 3.4496562792703918,
+    "height": 2.6,
+    "area": 20.24947749671848
+  },
+  "dxf_origin_mm": [
+    3029.33779315995,
+    -31483.1991071441,
+    0
+  ],
+  "coordinates": "Model: X right, Y toward top of plan, Z up. GLB: X right, Y up, Z toward bottom of plan.",
+  "assumptions": {
+    "ceiling_height": 2.6,
+    "window_sill": 0.9,
+    "window_head": 2.1,
+    "door_opening_head": 2.05,
+    "floor_thickness": 0.1
+  },
+  "door_openings_x": [
+    [
+      0.11039492995182218,
+      1.0103949283239921
+    ],
+    [
+      3.7542586246522225,
+      4.554258625107169
+    ]
+  ],
+  "window_openings_y": [
+    [
+      0.712933974551499,
+      1.312933974551499
+    ],
+    [
+      1.312933974551499,
+      2.712933974551499
+    ]
+  ],
+  "boxes": [
+    {
+      "name": "Podlaha",
+      "min": [
+        -0.1,
+        -0.15,
+        -0.1
+      ],
+      "max": [
+        6.11999859041066,
+        3.649656279270392,
+        0
+      ],
+      "group": "floor",
+      "side": "",
+      "color": "#c7c0b2"
+    },
+    {
+      "name": "Severni stena",
+      "min": [
+        -0.1,
+        3.4496562792703918,
+        0
+      ],
+      "max": [
+        6.11999859041066,
+        3.649656279270392,
+        2.6
+      ],
+      "group": "wall",
+      "side": "north",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Zapadni pricka",
+      "min": [
+        -0.1,
+        0,
+        0
+      ],
+      "max": [
+        0,
+        3.4496562792703918,
+        2.6
+      ],
+      "group": "wall",
+      "side": "west",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Jizni stena 1",
+      "min": [
+        0,
+        -0.15,
+        0
+      ],
+      "max": [
+        0.11039492995182218,
+        0,
+        2.6
+      ],
+      "group": "wall",
+      "side": "south",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Jizni stena 2",
+      "min": [
+        1.0103949283239921,
+        -0.15,
+        0
+      ],
+      "max": [
+        3.7542586246522225,
+        0,
+        2.6
+      ],
+      "group": "wall",
+      "side": "south",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Jizni stena 3",
+      "min": [
+        4.554258625107169,
+        -0.15,
+        0
+      ],
+      "max": [
+        5.86999859041066,
+        0,
+        2.6
+      ],
+      "group": "wall",
+      "side": "south",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Nadprazi dveri 1",
+      "min": [
+        0.11039492995182218,
+        -0.15,
+        2.05
+      ],
+      "max": [
+        1.0103949283239921,
+        0,
+        2.6
+      ],
+      "group": "wall",
+      "side": "south",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Nadprazi dveri 2",
+      "min": [
+        3.7542586246522225,
+        -0.15,
+        2.05
+      ],
+      "max": [
+        4.554258625107169,
+        0,
+        2.6
+      ],
+      "group": "wall",
+      "side": "south",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Vychodni stena dolni",
+      "min": [
+        5.86999859041066,
+        0,
+        0
+      ],
+      "max": [
+        6.11999859041066,
+        0.712933974551499,
+        2.6
+      ],
+      "group": "wall",
+      "side": "east",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Vychodni stena horni",
+      "min": [
+        5.86999859041066,
+        2.712933974551499,
+        0
+      ],
+      "max": [
+        6.11999859041066,
+        3.4496562792703918,
+        2.6
+      ],
+      "group": "wall",
+      "side": "east",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Parapetni stena - odhad vysky",
+      "min": [
+        5.86999859041066,
+        0.712933974551499,
+        0
+      ],
+      "max": [
+        6.11999859041066,
+        2.712933974551499,
+        0.9
+      ],
+      "group": "wall",
+      "side": "east",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Nadprazi okna - odhad vysky",
+      "min": [
+        5.86999859041066,
+        0.712933974551499,
+        2.1
+      ],
+      "max": [
+        6.11999859041066,
+        2.712933974551499,
+        2.6
+      ],
+      "group": "wall",
+      "side": "east",
+      "color": "#ddd9ce"
+    },
+    {
+      "name": "Orientacni ram 1 dolni",
+      "min": [
+        5.97499859041066,
+        0.712933974551499,
+        0.9
+      ],
+      "max": [
+        6.03499859041066,
+        1.312933974551499,
+        0.945
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni ram 1 horni",
+      "min": [
+        5.97499859041066,
+        0.712933974551499,
+        2.055
+      ],
+      "max": [
+        6.03499859041066,
+        1.312933974551499,
+        2.1
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni ram 1 leva",
+      "min": [
+        5.97499859041066,
+        0.712933974551499,
+        0.945
+      ],
+      "max": [
+        6.03499859041066,
+        0.757933974551499,
+        2.055
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni ram 1 prava",
+      "min": [
+        5.97499859041066,
+        1.267933974551499,
+        0.945
+      ],
+      "max": [
+        6.03499859041066,
+        1.312933974551499,
+        2.055
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni zaskleni 1",
+      "min": [
+        5.99999859041066,
+        0.757933974551499,
+        0.945
+      ],
+      "max": [
+        6.00599859041066,
+        1.267933974551499,
+        2.055
+      ],
+      "group": "glass",
+      "side": "east",
+      "color": "#b4d3df"
+    },
+    {
+      "name": "Orientacni ram 2 dolni",
+      "min": [
+        5.97499859041066,
+        1.312933974551499,
+        0.9
+      ],
+      "max": [
+        6.03499859041066,
+        2.712933974551499,
+        0.945
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni ram 2 horni",
+      "min": [
+        5.97499859041066,
+        1.312933974551499,
+        2.055
+      ],
+      "max": [
+        6.03499859041066,
+        2.712933974551499,
+        2.1
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni ram 2 leva",
+      "min": [
+        5.97499859041066,
+        1.312933974551499,
+        0.945
+      ],
+      "max": [
+        6.03499859041066,
+        1.357933974551499,
+        2.055
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni ram 2 prava",
+      "min": [
+        5.97499859041066,
+        2.667933974551499,
+        0.945
+      ],
+      "max": [
+        6.03499859041066,
+        2.712933974551499,
+        2.055
+      ],
+      "group": "frame",
+      "side": "east",
+      "color": "#aaa99f"
+    },
+    {
+      "name": "Orientacni zaskleni 2",
+      "min": [
+        5.99999859041066,
+        1.357933974551499,
+        0.945
+      ],
+      "max": [
+        6.00599859041066,
+        2.667933974551499,
+        2.055
+      ],
+      "group": "glass",
+      "side": "east",
+      "color": "#b4d3df"
+    }
+  ],
+  "kitchen_footprint": [
+    [
+      1.0549089820235305,
+      0,
+      3.6529089820235288,
+      0.6
+    ],
+    [
+      3.0529089820235287,
+      0.6,
+      3.6529089820235288,
+      2.0
+    ]
+  ]
+}
