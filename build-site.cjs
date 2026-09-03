@@ -7,7 +7,9 @@ const model=require('./model-updates.cjs')(JSON.parse(read('apartment-model.json
 if(model.version!==20)throw Error('Review adapter before changing model revision');
 const original=read('apartment-viewer.html');
 let renderer=original.match(/<script>([\s\S]*?)<\/script>/)[1];
+renderer=renderer.replace('const opened=openDW.checked',"if(glazing.checked&&b.assembly==='loggia_panel')for(const p of v)for(let i=0;i<3;i++)p[i]+=b.slide[i];\nconst opened=openDW.checked");
 renderer=renderer.replace("kitchen=root.querySelector('[data-kitchen]')","kitchen={checked:true}");
+renderer=renderer.replace('a[1]-=.35;c[1]-=.35;','a[1]+=model.laundry_slide;c[1]+=model.laundry_slide;');
 renderer=renderer.replace('const opened=openDW.checked',"if(cleaning.checked&&b.assembly==='cleaning_door'){const [hx,hy]=b.hinge,ang=b.open_angle*Math.PI/180;for(const p of v){const x=p[0]-hx,y=p[1]-hy;p[0]=hx+x*Math.cos(ang)-y*Math.sin(ang);p[1]=hy+x*Math.sin(ang)+y*Math.cos(ang);}}\nconst opened=openDW.checked");
 renderer=renderer.replace('if(door)n=',"if(cleaning.checked&&b.assembly==='cleaning_door'){const ang=b.open_angle*Math.PI/180;n=[n[0]*Math.cos(ang)-n[1]*Math.sin(ang),n[0]*Math.sin(ang)+n[1]*Math.cos(ang),n[2]];}if(door)n=");
 renderer=renderer.replace('const model=__MODEL_JSON__;','const model='+JSON.stringify(model).replace(/</g,'\\u003c')+';');

@@ -1,5 +1,7 @@
 // Shared geometry for all room views.
 const cleaning=root.querySelector('[data-cleaning]');
+const glazing=root.querySelector('[data-glazing]');
+glazing.onchange=()=>draw();
 function clipRoomPolygon(vertices,bounds,pad){
  let result=vertices;
  for(let axis=0;axis<2;axis++)for(const sign of [-1,1]){

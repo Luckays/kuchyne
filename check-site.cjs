@@ -11,7 +11,11 @@ const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const model=require('./model-updates.cjs')(JSON.parse(fs.readFileSync(__dirname+'/apartment-model.json','utf8')));
 const wcDoor=model.doors.items.find(d=>d.id==='DV7');
 assert.equal(model.doors.items.find(d=>d.id==='DV8').type,'wall_slide');
-assert(model.boxes.filter(b=>b.name.startsWith('Botnik ')).every(b=>b.max[1]<=-2.45+1e-8));
+assert(!model.boxes.some(b=>b.name.startsWith('Botnik ')));
+assert(model.doors.items.find(d=>d.id==='DV8').opening[0][1]>-2.24);
+assert.equal(model.boxes.filter(b=>b.name.startsWith('Lodzie posuvne sklo')).length,4);
+assert.equal(model.doors.items.find(d=>d.id==='DV4').angle,-90);
+assert.equal(model.doors.items.find(d=>d.id==='DV5').angle,90);
 assert.equal(model.boxes.filter(b=>b.assembly==='cleaning_door').length,2);
 assert.equal(model.boxes.filter(b=>b.name.startsWith('WC seda dlazba')).length,6);
 assert(!model.boxes.some(b=>b.name.startsWith('Stojan trumpety')));
@@ -79,7 +83,7 @@ for(const width of [360,900]){
  const options=elements.get('[data-service-point]').innerHTML;
  const ids=[...options.matchAll(/value="([^"]+)"/g)].map(m=>m[1]);assert(ids.length>0);for(const id of ids)assert.equal(model.services.points.find(p=>p.id===id)?.room,'PR');
  layer.value='interior';layer.onchange();
- for(const name of ['keyboard','laundry','bins','inspect','open','ceiling','screen','doors','hvac','shutters','cleaning']){const el=elements.get('[data-'+name+']');el.checked=true;el.onchange();el.checked=false;el.onchange();}
+ for(const name of ['keyboard','laundry','bins','inspect','open','ceiling','screen','doors','hvac','shutters','cleaning','glazing']){const el=elements.get('[data-'+name+']');el.checked=true;el.onchange();el.checked=false;el.onchange();}
  api.select('all');events.keydown({key:'ArrowLeft',preventDefault(){}});api.zoom(1.15);
  console.log(width+': 10 rooms, 3D/plan, room-scoped points, all toggles OK');
 }

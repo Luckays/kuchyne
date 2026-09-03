@@ -173,5 +173,74 @@ module.exports = function updateModel(model) {
  add('Trumpeta mekka podlozka',[-2.02,.012,1.20],[-1.48,.29,1.225],'#53615d','r19_decor');
  for(let x=1.305;x<3.05;x+=.6)for(let y=-3.6;y<-2.65;y+=.6)
   add('WC seda dlazba '+x+' '+y,[x+.001,y+.001,0],[Math.min(x+.599,3.05),Math.min(y+.599,-2.65),.008],'#929594','wc_finish');
+ // Compact L-shaped wardrobe: custom dimensions, not a scaled IKEA product.
+ model.boxes=model.boxes.filter(b=>!b.name.startsWith('Botnik ')&&!b.name.startsWith('Satna ')&&!b.name.startsWith('Uklid '));
+ delete model.cleaning_access.shoe_cabinet_end_y;
+ model.cleaning_access.approach_depth_m=.66;
+ const cabinet=(name,x0,y0,x1,y1,z1)=>{
+  add(name+' bok levy',[x0,y0,.08],[x0+.018,y1,z1],'#c99e6b','r18_furniture');
+  add(name+' bok pravy',[x1-.018,y0,.08],[x1,y1,z1],'#c99e6b','r18_furniture');
+  for(const z of [.08,z1-.018])add(name+' vodorovna '+z,[x0,y0,z],[x1,y1,z+.018],'#c99e6b','r18_furniture');
+ };
+ cabinet('Satna roh hlavni',-1.10,-3.57,-.15,-3.02,2.40);
+ add('Satna roh zada',[-1.082,-3.57,.098],[-.168,-3.552,2.38],'#d9d8cf','r18_furniture');
+ add('Satna tyc na bundy',[-1.03,-3.29,1.79],[-.23,-3.265,1.815],'#53615d','r18_furniture');
+ for(const x of [-.92,-.69,-.46]){
+  add('Satna raminko '+x,[x-.008,-3.50,1.70],[x+.008,-3.06,1.715],'#b9956e','r18_furniture');
+  add('Satna bunda '+x,[x-.045,-3.47,.91],[x+.045,-3.09,1.70],'#7c8885','r18_furniture');
+ }
+ add('Satna horni police',[-1.08,-3.55,2.04],[-.17,-3.04,2.06],'#c99e6b','r18_furniture');
+ cabinet('Satna roh nizke police',-1.10,-3.02,-.82,-2.36,1.10);
+ for(const z of [.36,.68])add('Satna roh police '+z,[-1.08,-3.00,z],[-.84,-2.38,z+.02],'#c99e6b','r18_furniture');
+ // Leave the existing electrical board accessible above the low return.
+ for(const b of model.boxes.filter(b=>b.assembly==='laundry')){const lo=b.min[1];b.min[1]=-3.02-(b.max[1]+1.92);b.max[1]=-3.02-(lo+1.92);}
+ model.laundry_slide=.35;
+ const utility=p=>[-.94-(p[1]+1.62)*.5,-1.78+(p[0]+.865)*1.3,p[2]];
+ transform('Vysavac',utility);transform('Zehlici prkno',utility);
+ for(const [id,xyz] of [['Z41',utility([-.76,-1.375,1.3])],['S08',[-.16,-2.32,1.1]],['D01',[-1.045,-2.24,2.25]]]){
+  const p=model.services.points.find(p=>p.id===id);if(!p)continue;
+  const delta=xyz.map((v,i)=>v-p.xyz[i]);p.xyz=xyz;
+  for(const b of model.boxes.filter(b=>b.name.startsWith(id+' ')))for(let i=0;i<3;i++){b.min[i]+=delta[i];b.max[i]+=delta[i];}
+  for(const r of model.services.routes){if(r.end===id)r.path[r.path.length-1]=xyz.slice();if(r.start===id)r.path[0]=xyz.slice();}
+ }
+ cabinet('Satna uklid naproti vstupu',-1.10,-2.20,-.78,-1.36,2.40);
+ model.boxes=model.boxes.filter(b=>!b.name.startsWith('Satna uklid naproti vstupu bok'));
+ for(const y of [-2.20,-1.378])add('Satna uklid bocnice '+y,[-1.10,y,.08],[-.78,y+.018,2.40],'#c99e6b','r18_furniture');
+ add('Satna uklid zada',[-1.10,-2.18,.10],[-1.082,-1.38,2.38],'#d9d8cf','r18_furniture');
+ for(const z of [1.64,1.98])add('Satna uklid police '+z,[-1.08,-2.18,z],[-.80,-1.38,z+.02],'#c99e6b','r18_furniture');
+ for(let i=0;i<2;i++){
+  const y=-2.20+i*.42;
+  model.boxes.push({name:'Satna uklid dvere '+i,min:[-.779,y+.003,.083],max:[-.761,y+.417,2.397],color:'#c99e6b',group:'r18_door',side:'',assembly:'cleaning_door',hinge:[-.779,i===0?y:y+.42],open_angle:i===0?-95:95});
+ }
+ // Move the entrance 60 cm to the right as seen from the hall; slide toward the entry.
+ const dy=.60;
+ wardrobeDoor.opening=wardrobeDoor.opening.map(p=>[p[0],p[1]+dy]);wardrobeDoor.hinge[1]+=dy;
+ wardrobeDoor.slide=[0,-.90,0];wardrobeDoor.status='Vstup posunutý doprava; posuv po chodbové straně směrem ke vstupu, bez pouzdra.';
+ for(const b of model.boxes.filter(b=>b.name.startsWith('DV8 '))){b.min[1]+=dy;b.max[1]+=dy;}
+ const wardrobeTrack=model.boxes.find(b=>b.name==='DV8 kryt kolejnice');wardrobeTrack.min[1]=-3.20;wardrobeTrack.max[1]=-1.36;
+ const lintel=model.boxes.find(b=>b.name===wardrobeDoor.source);lintel.min[1]+=dy;lintel.max[1]+=dy;
+ for(const m of model.meshes.filter(m=>m.name.startsWith('Byt Zeď_19 '))){
+  if(m.name==='Byt Zeď_19 0-0')for(const p of m.vertices)if(p[1]>-2.84)p[1]+=dy;
+  if(m.name==='Byt Zeď_19 1-0')for(const p of m.vertices)if(p[1]<-2.02)p[1]+=dy;
+ }
+ // Reverse hinge sides where requested, and swing the hinged room doors inward.
+ for(const id of ['DV2','DV6']){
+  const d=model.doors.items.find(d=>d.id===id),axis=d.axis;
+  const sum=d.opening[0][axis]+d.opening[1][axis];d.hinge[axis]=sum-d.hinge[axis];
+  for(const b of model.boxes.filter(b=>b.door_id===id)){const lo=b.min[axis];b.min[axis]=sum-b.max[axis];b.max[axis]=sum-lo;}
+  d.angle=-d.angle;
+ }
+ model.doors.items.find(d=>d.id==='DV2').angle=-90;
+ model.doors.items.find(d=>d.id==='DV4').angle=-90;
+ model.doors.items.find(d=>d.id==='DV5').angle=90;
+ // Sliding glazing above the retained loggia railing, with separate tracks.
+ for(const z of [1.10,2.55])add('Lodzie zaskleni kolejnice '+z,[-5.015,-.12,z],[-4.91,3.43,z+.035],'#788784','balcony_frame');
+ for(let i=0;i<4;i++){
+  const y=-.10+i*.88,x=-4.995+i*.020,slide=[0,-i*.88,0];
+  const pane=(name,min,max,color)=>model.boxes.push({name,min,max,color,group:'balcony_glazing',side:'',assembly:'loggia_panel',slide});
+  pane('Lodzie posuvne sklo '+i,[x,y,1.14],[x+.006,y+.87,2.55],'#c4dadd');
+  for(const yy of [y,y+.85])pane('Lodzie posuvny ram '+i+' '+yy,[x-.005,yy,1.13],[x+.014,yy+.02,2.55],'#788784');
+ }
+ model.loggia_glazing={type:'four sliding panes above railing',status:'Concept only; ventilation and outdoor AC operation require review. No gas oven in enclosed space.'};
  return model;
 };
