@@ -52,14 +52,14 @@ module.exports = function updateModel(model) {
  model.boxes.push({name:'DV3 spodni tesneni',min:[3.714,-.239,.003],max:[4.594,-.206,.012],color:'#53615d',group:'door_leaf',side:'',door_id:'DV3'});
 
  // User-selected tight-fit study: AC above the bedroom sliding door.
- // 10 mm above the rail, ~7 mm above the highest modeled intake; NOT installation approval.
- const turn=p=>[p[0]-.91,p[1],p[2]+.19];
+ // Lowered door assembly leaves room above the unit; product clearances still unverified.
+ const turn=p=>[p[0]-.91,p[1],p[2]+.105];
  for(const b of model.boxes.filter(b=>b.name.startsWith('Nastenna klimatizace Loznice'))){
   const a=turn(b.min),c=turn(b.max);
   b.min=a.map((v,i)=>Math.min(v,c[i]));b.max=a.map((v,i)=>Math.max(v,c[i]));
  }
- model.wall_ac_units.Loznice={wall:'north',origin:[3.75,-.16,2.17],status:'Prostorová varianta nad dveřmi; odstupy výrobce nejsou ověřené.'};
- const route=[[-4.05,3.306,2.54],[-.2,3.306,2.54],[-.2,.055,2.54],[4.49,.055,2.54],[4.49,-.22,2.54],[4.49,-.22,2.34]];
+ model.wall_ac_units.Loznice={wall:'north',origin:[3.75,-.16,2.085],status:'Prostorová varianta nad dveřmi 195 cm; odstupy výrobce nejsou ověřené.'};
+ const route=[[-4.05,3.306,2.54],[-.2,3.306,2.54],[-.2,.055,2.54],[4.49,.055,2.54],[4.49,-.22,2.54],[4.49,-.22,2.255]];
  model.climate_routes.refrigerant.Loznice=route;
  model.services.routes.find(r=>r.id==='AC-LO').path=route.map(p=>p.slice());
  model.services.points.find(p=>p.id==='K-LO').xyz=route.at(-1).slice();
@@ -100,5 +100,41 @@ module.exports = function updateModel(model) {
  }
  for(const [name,path] of Object.entries(model.climate_routes.refrigerant))if(name!=='Loznice')model.climate_routes.refrigerant[name]=path.map(p=>[p[0],p[1],routeZ(p[2])]);
  for(const b of model.boxes)if(['ac_pipe','svc_electric','svc_data'].includes(b.group)&&!b.name.startsWith('Chladivo a kabelaz Loznice')){b.min[2]=routeZ(b.min[2]);b.max[2]=routeZ(b.max[2]);}
+ // 195 cm interpreted as clear door opening, with separate leaf/trim dimensions.
+ for(const d of model.doors.items){
+  d.clear_height_m=1.95;
+  const lintel=model.boxes.find(b=>b.name===d.source);
+  if(lintel)lintel.min[2]=1.981;
+  for(const b of model.boxes.filter(b=>b.name.startsWith(d.id+' ')&&b.group==='door_frame')){
+   if(b.name.includes('zaruben')||b.name.includes('oblozka')){
+    if(b.min[2]>1.9)b.min[2]=1.95;
+    b.max[2]=1.976;
+   }else if(d.id==='DV3'){
+    if(b.min[2]>1.9)b.min[2]-=.10;
+    if(b.max[2]>1.9)b.max[2]-=.10;
+   }
+  }
+  const leaf=model.boxes.find(b=>b.door_id===d.id&&b.name.includes('kridlo'));
+  if(leaf){leaf.max[2]=d.id==='DV3'?1.975:1.946;d.height_m=leaf.max[2]-leaf.min[2];}
+  if(d.pocket_bounds)d.pocket_bounds[1][2]=1.981;
+ }
+ // Radiators and provisional vertical pipe enclosures from the marked plan.
+ const heating=[
+  {room:'office',label:'Pracovna',x:-3.60,y:1.65,length:1.05,side:1,pipeY:3.15},
+  {room:'children',label:'Detsky pokoj',x:-4.73,y:-1.90,length:1.20,side:1,pipeY:-.30},
+  {room:'living',label:'Obyvak',x:5.87,y:1.70,length:1.00,side:-1,pipeY:.18},
+  {room:'bedroom',label:'Loznice',x:5.87,y:-1.88,length:1.20,side:-1,pipeY:-.30}
+ ];
+ model.heating={source:'User annotated plan',pipe_orientation:'vertical, provisional',radiator_dimensions:'schematic',rooms:heating};
+ for(const h of heating){
+  const xa=h.x+h.side*.04,xb=h.x+h.side*.15;
+  add('Radiator '+h.label,[Math.min(xa,xb),h.y-h.length/2,.15],[Math.max(xa,xb),h.y+h.length/2,.75],'#f5f4ef','heating');
+  for(let i=0;i<Math.floor(h.length/.055);i++){
+   const x=h.x+h.side*.154,y=h.y-h.length/2+.025+i*.055;
+   add('Zebro radiatoru '+h.label+' '+i,[x-.003,y,.18],[x+.003,y+.012,.72],'#d8dddb','heating');
+  }
+  const x2=h.x+h.side*.18;
+  add('Kastlik topeni '+h.label,[Math.min(h.x,x2),h.pipeY-.10,0],[Math.max(h.x,x2),h.pipeY+.10,2.48],'#ddd9ce','heating');
+ }
  return model;
 };
