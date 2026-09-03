@@ -4,9 +4,18 @@ const html=fs.readFileSync(__dirname+'/index.html','utf8');
 assert(!html.includes('data-view='),'Legacy view controls must be removed');
 assert(!html.includes('id="room-note"'),'Working notes must be removed');
 assert(!html.includes('Pracovní návrh'),'Draft badge must be removed');
+assert(!html.includes('data-kitchen'),'Furniture hiding control removed');
+assert(!html.includes('id="furniture-list"'),'Room overview removed');
+assert(html.includes('class="layer-card"'),'Right-side layer panel exists');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const model=require('./model-updates.cjs')(JSON.parse(fs.readFileSync(__dirname+'/apartment-model.json','utf8')));
 const wcDoor=model.doors.items.find(d=>d.id==='DV7');
+assert.equal(model.doors.items.find(d=>d.id==='DV8').type,'wall_slide');
+assert(model.boxes.filter(b=>b.name.startsWith('Botnik ')).every(b=>b.max[1]<=-2.45+1e-8));
+assert.equal(model.boxes.filter(b=>b.assembly==='cleaning_door').length,2);
+assert.equal(model.boxes.filter(b=>b.name.startsWith('WC seda dlazba')).length,6);
+assert(!model.boxes.some(b=>b.name.startsWith('Stojan trumpety')));
+assert(model.meshes.find(b=>b.name==='Kytara telo').vertices.every(p=>p[0]<-2.7&&p[1]>.05));
 assert.equal(model.ceiling.drop,.12);
 assert.equal(model.ceiling.finished_height,2.48);
 assert.equal(model.wall_ac_units.Loznice.wall,'north');
@@ -57,6 +66,11 @@ for(const width of [360,900]){
   api.select(room,true);
  }
  assert(fingerprints.size>=9,'Room images should differ');
+ api.select('wardrobe',false);const wardrobeClosed=canvas.toBuffer('image/png');
+ const cleaning=elements.get('[data-cleaning]');cleaning.checked=true;cleaning.onchange();
+ assert(!canvas.toBuffer('image/png').equals(wardrobeClosed),'Cleaning cabinet doors open');
+ cleaning.checked=false;cleaning.onchange();
+ const ceiling=elements.get('[data-ceiling]');ceiling.checked=true;api.select('bedroom',false);assert(ceiling.checked,'Room selection preserves layers');ceiling.checked=false;
  api.select('bedroom',false);const shut=canvas.toBuffer('image/png');
  elements.get('[data-doors]').checked=true;elements.get('[data-doors]').onchange();
  assert(!canvas.toBuffer('image/png').equals(shut),'Bedroom slider must change the rendered view');
@@ -65,7 +79,7 @@ for(const width of [360,900]){
  const options=elements.get('[data-service-point]').innerHTML;
  const ids=[...options.matchAll(/value="([^"]+)"/g)].map(m=>m[1]);assert(ids.length>0);for(const id of ids)assert.equal(model.services.points.find(p=>p.id===id)?.room,'PR');
  layer.value='interior';layer.onchange();
- for(const name of ['keyboard','laundry','bins','inspect','open','ceiling','screen','doors','hvac','shutters']){const el=elements.get('[data-'+name+']');el.checked=true;el.onchange();el.checked=false;el.onchange();}
+ for(const name of ['keyboard','laundry','bins','inspect','open','ceiling','screen','doors','hvac','shutters','cleaning']){const el=elements.get('[data-'+name+']');el.checked=true;el.onchange();el.checked=false;el.onchange();}
  api.select('all');events.keydown({key:'ArrowLeft',preventDefault(){}});api.zoom(1.15);
  console.log(width+': 10 rooms, 3D/plan, room-scoped points, all toggles OK');
 }

@@ -1,4 +1,15 @@
-// Runs inside the original renderer closure. Model geometry is unchanged.
+// Shared geometry for all room views.
+const cleaning=root.querySelector('[data-cleaning]');
+function clipRoomPolygon(vertices,bounds,pad){
+ let result=vertices;
+ for(let axis=0;axis<2;axis++)for(const sign of [-1,1]){
+  const limit=sign<0?bounds[axis]-pad:bounds[axis+2]+pad,src=result;result=[];
+  if(!src.length)return result;
+  let prev=src.at(-1),prevIn=sign*(prev[axis]-limit)<=0;
+  for(const p of src){const inside=sign*(p[axis]-limit)<=0;if(inside!==prevIn){const t=(limit-prev[axis])/(p[axis]-prev[axis]);result.push(prev.map((v,i)=>v+t*(p[i]-v)));}if(inside)result.push(p);prev=p;prevIn=inside;}
+ }
+ return result;
+}
 Object.assign(roomViews, {
   living:{b:[0,0,5.87,3.45],c:[2.94,1.72,1.1],a:-.85,e:.8,room:'OB'},
   bath:{b:[1.305,-2.55,3.05,-.15],c:[2.18,-1.35,1.1],a:-.85,e:.8,room:'KO'},
@@ -15,14 +26,14 @@ function roomFloor(rv){
 let selectedRoom='all', selectedPlan=false;
 function selectRoom(key,plan=false){
  selectedRoom=key;selectedPlan=plan;activeRoom=key==='all'?null:roomViews[key]?.room;
- focus=key==='all'?false:key;zoom=1;ceiling.checked=false;hvac.checked=false;cut.checked=true;
+ focus=key==='all'?false:key;zoom=1;
  const rv=roomViews[key];az=plan?-Math.PI/2:(rv?.a??-.85);el=plan?Math.PI/2:(rv?.e??.95);
  populatePoints();draw();
 }
-window.apartmentUI={select:selectRoom,zoom(factor){zoom=Math.max(.55,Math.min(2.5,zoom*factor));draw();}};
-svcLayer.onchange=()=>{populatePoints();ceiling.checked=false;draw();};
+window.apartmentUI={select:selectRoom,reset(){ceiling.checked=false;hvac.checked=false;cut.checked=true;},zoom(factor){zoom=Math.max(.55,Math.min(2.5,zoom*factor));draw();}};
+svcLayer.onchange=()=>{populatePoints();draw();};
 svcPoint.onchange=draw;
-cut.onchange=draw;kitchen.onchange=draw;openDW.onchange=draw;ceiling.onchange=draw;
+cut.onchange=draw;cleaning.onchange=draw;openDW.onchange=draw;ceiling.onchange=draw;
 hvac.onchange=draw;shutters.onchange=draw;bins.onchange=draw;inspect.onchange=draw;
 doorControl.onchange=()=>{if(doorControl.checked)screen.checked=false;draw();};
 keyboard.onchange=draw;laundry.onchange=draw;

@@ -136,5 +136,42 @@ module.exports = function updateModel(model) {
   const x2=h.x+h.side*.18;
   add('Kastlik topeni '+h.label,[Math.min(h.x,x2),h.pipeY-.10,0],[Math.max(h.x,x2),h.pipeY+.10,2.48],'#ddd9ce','heating');
  }
+ // Wardrobe door slides north along the hall face, leaving the narrow room clear.
+ const wardrobeDoor=model.doors.items.find(d=>d.id==='DV8');
+ wardrobeDoor.type='wall_slide';wardrobeDoor.angle=0;wardrobeDoor.slide=[0,.90,0];
+ wardrobeDoor.hinge=[-.045,-2.875];wardrobeDoor.height_m=1.967;
+ for(const b of model.boxes.filter(b=>b.door_id==='DV8')){
+  if(b.name.includes('klika')){
+   b.name=b.name.replace('klika','zapustena musle');
+   const x=b.name.endsWith('-1')?-.068:-.022;
+   b.min=[x,-2.79,.94];b.max=[x+.004,-2.75,1.06];
+  }else{b.name='DV8 Satna posuvne kridlo';b.min=[-.065,-2.875,.008];b.max=[-.025,-1.995,1.975];}
+ }
+ add('DV8 kryt kolejnice',[-.075,-2.90,1.985],[-.010,-1.06,2.06],'#c99e6b');
+ // Shorten the shoe cabinet: preserve a 53 cm approach to the cleaning doors.
+ for(const b of model.boxes.filter(b=>b.name.startsWith('Botnik '))){
+  const mapY=y=>-2.98+(y+2.98)*(.53/.983);
+  b.min[1]=mapY(b.min[1]);b.max[1]=mapY(b.max[1]);
+ }
+ for(const [i,b] of model.boxes.filter(b=>b.name.startsWith('Satna vpravo uklid dvere')).entries()){
+  b.assembly='cleaning_door';b.hinge=[i===0?b.min[0]:b.max[0],b.min[1]];b.open_angle=i===0?-100:100;
+ }
+ model.cleaning_access={approach_depth_m:.53,shoe_cabinet_end_y:-2.45};
+ // Transform complete instruments, including their mesh bodies.
+ const transform=(prefix,fn)=>{
+  for(const b of model.boxes.filter(b=>b.name.startsWith(prefix))){const a=fn(b.min),c=fn(b.max);b.min=a.map((v,i)=>Math.min(v,c[i]));b.max=a.map((v,i)=>Math.max(v,c[i]));}
+  for(const m of model.meshes.filter(m=>m.name.startsWith(prefix)))m.vertices=m.vertices.map(fn);
+ };
+ transform('Kytara',p=>[p[1]-4.98,-p[0]-.09,p[2]+.15]);
+ // Move the displaced picture onto the former instrument wall.
+ for(const b of model.boxes.filter(b=>/^Pracovna obraz .* 0$/.test(b.name))){
+  const fn=p=>[-.15-p[1],1.0+p[0]+3.03,p[2]],a=fn(b.min),c=fn(b.max);
+  b.min=a.map((v,i)=>Math.min(v,c[i]));b.max=a.map((v,i)=>Math.max(v,c[i]));
+ }
+ model.boxes=model.boxes.filter(b=>!b.name.startsWith('Stojan trumpety'));
+ transform('Trumpeta',p=>[-1.75+p[2]-.9,.15+p[1]-2.8,1.225-.885-p[0]]);
+ add('Trumpeta mekka podlozka',[-2.02,.012,1.20],[-1.48,.29,1.225],'#53615d','r19_decor');
+ for(let x=1.305;x<3.05;x+=.6)for(let y=-3.6;y<-2.65;y+=.6)
+  add('WC seda dlazba '+x+' '+y,[x+.001,y+.001,0],[Math.min(x+.599,3.05),Math.min(y+.599,-2.65),.008],'#929594','wc_finish');
  return model;
 };

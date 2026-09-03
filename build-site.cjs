@@ -7,6 +7,9 @@ const model=require('./model-updates.cjs')(JSON.parse(read('apartment-model.json
 if(model.version!==20)throw Error('Review adapter before changing model revision');
 const original=read('apartment-viewer.html');
 let renderer=original.match(/<script>([\s\S]*?)<\/script>/)[1];
+renderer=renderer.replace("kitchen=root.querySelector('[data-kitchen]')","kitchen={checked:true}");
+renderer=renderer.replace('const opened=openDW.checked',"if(cleaning.checked&&b.assembly==='cleaning_door'){const [hx,hy]=b.hinge,ang=b.open_angle*Math.PI/180;for(const p of v){const x=p[0]-hx,y=p[1]-hy;p[0]=hx+x*Math.cos(ang)-y*Math.sin(ang);p[1]=hy+x*Math.sin(ang)+y*Math.cos(ang);}}\nconst opened=openDW.checked");
+renderer=renderer.replace('if(door)n=',"if(cleaning.checked&&b.assembly==='cleaning_door'){const ang=b.open_angle*Math.PI/180;n=[n[0]*Math.cos(ang)-n[1]*Math.sin(ang),n[0]*Math.sin(ang)+n[1]*Math.cos(ang),n[2]];}if(door)n=");
 renderer=renderer.replace('const model=__MODEL_JSON__;','const model='+JSON.stringify(model).replace(/</g,'\\u003c')+';');
 // The retained hood is deeper than the new ceiling cavity: show its projecting casing.
 renderer=renderer.replace("['LuxeAir navrh tela','Platno zapustene pouzdro']","['Platno zapustene pouzdro']");
@@ -18,6 +21,9 @@ renderer=renderer.replace(".concat(rv?[{name:'View floor',group:'floor',min:[rv.
 renderer=renderer.replace("if(inspect.checked&&b.group==='r18_door')continue;","if(focus==='hall'&&b.max[0]<-.10&&b.max[1]<-1.30)continue;\n if(inspect.checked&&b.group==='r18_door')continue;");
 renderer=renderer.replace("for(const t of meshTriangles){","for(const t of meshTriangles){if(focus==='hall'&&Math.max(...t.v.map(p=>p[0]))<-.10&&Math.max(...t.v.map(p=>p[1]))<-1.30)continue;");
 // Do not cut a room-view floor or service routes from neighbouring rooms into the view.
+renderer=renderer.replace(/rv\.b\[(\d)\]([+-])\.06/g,'rv.b[$1]$2.30');
+renderer=renderer.replace('const a=b.min.slice(),c=b.max.slice();','const a=b.min.slice(),c=b.max.slice();if(rv){const pad=["wall","frame","glass","door_frame","door_leaf","shutter","shutter_curtain"].includes(b.group)?.30:.02;for(let i=0;i<2;i++){a[i]=Math.max(a[i],rv.b[i]-pad);c[i]=Math.min(c[i],rv.b[i+2]+pad);}if(c[0]<=a[0]||c[1]<=a[1])continue;}');
+renderer=renderer.replace('const pts=vv.map(project);polys.push({pts,depth:pts.reduce((s,p)=>s+p[2],0)/3,n:t.n,color:t.color});','const clipped=rv?clipRoomPolygon(vv,rv.b,t.group===\'wall\'?.30:.02):vv;if(clipped.length<3)continue;const pts=clipped.map(project);polys.push({pts,depth:pts.reduce((s,p)=>s+p[2],0)/pts.length,n:t.n,color:t.color});');
 renderer=renderer.replace('const path=r.path.map(project);',"if(activeRoom){const ids=new Set(svc.points.filter(p=>p.room===activeRoom).map(p=>p.id));if(!ids.has(r.start)&&!ids.has(r.end))continue;}const path=r.path.map(project);");
 // Remove obsolete camera controls instead of retaining invisible legacy buttons.
 renderer=renderer.replace(/root\.querySelector\('\[data-view="iso"\]'\)\.onclick=[\s\S]*?(?=new ResizeObserver\(draw\))/, '');
