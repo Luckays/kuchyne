@@ -8,6 +8,8 @@ if(model.version!==20)throw Error('Review adapter before changing model revision
 const original=read('apartment-viewer.html');
 let renderer=original.match(/<script>([\s\S]*?)<\/script>/)[1];
 renderer=renderer.replace('const model=__MODEL_JSON__;','const model='+JSON.stringify(model).replace(/</g,'\\u003c')+';');
+// The retained hood is deeper than the new ceiling cavity: show its projecting casing.
+renderer=renderer.replace("['LuxeAir navrh tela','Platno zapustene pouzdro']","['Platno zapustene pouzdro']");
 renderer=renderer.replace('if(door){const [hx,hy]=door.hinge;',"if(door?.type==='wall_slide'){for(const p of v)for(let axis=0;axis<3;axis++)p[axis]+=door.slide[axis];}else if(door){const [hx,hy]=door.hinge;");
 // Fully opened pocket leaves are concealed inside the wall, even in cutaway views.
 renderer=renderer.replace("if(inspect.checked&&b.group==='r18_door')continue;", "if(doorControl.checked&&b.door_id&&doorMap[b.door_id]?.type==='pocket')continue;\n if(inspect.checked&&b.group==='r18_door')continue;");
