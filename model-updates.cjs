@@ -242,5 +242,14 @@ module.exports = function updateModel(model) {
   for(const yy of [y,y+.85])pane('Lodzie posuvny ram '+i+' '+yy,[x-.005,yy,1.13],[x+.014,yy+.02,2.55],'#788784');
  }
  model.loggia_glazing={type:'four sliding panes above railing',status:'Concept only; ventilation and outdoor AC operation require review. No gas oven in enclosed space.'};
- return model;
+ // Same 60 cm tile format and stone palette as the bathroom.
+ const bathTiles=model.boxes.filter(b=>b.name.startsWith('Koupelna kamen podlaha'));
+ model.boxes.filter(b=>b.name.startsWith('WC seda dlazba')).forEach((b,i)=>{b.color=bathTiles[i].color;b.material='bathroom-grey-stone';});
+ const mirror=model.boxes.find(b=>b.name==='D07 zrcadlo chodba');
+ mirror.min=[1.185,-1.30,.28];mirror.max=[1.192,-.70,2.00];
+ const mirrorInfo=model.finishing.items.find(p=>p.id==='D07');if(mirrorInfo)mirrorInfo.xyz=[1.1885,-1.0,1.14];
+ // Left end of the office sofa as viewed facing its wall, away from the AC.
+ transform('Kytara',p=>[-p[1]-.09,p[0]+5.53,p[2]-.15]);
+ model.boxes=model.boxes.filter(b=>!/^Pracovna obraz .* 0$/.test(b.name));
+ return require('./wardrobe-layout.cjs')(model);
 };
