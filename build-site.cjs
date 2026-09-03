@@ -3,11 +3,13 @@ const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
 const read=name=>fs.readFileSync(path.join(__dirname,name),'utf8');
-const model=JSON.parse(read('apartment-model.json'));
+const model=require('./model-updates.cjs')(JSON.parse(read('apartment-model.json')));
 if(model.version!==20)throw Error('Review adapter before changing model revision');
 const original=read('apartment-viewer.html');
 let renderer=original.match(/<script>([\s\S]*?)<\/script>/)[1];
 renderer=renderer.replace('const model=__MODEL_JSON__;','const model='+JSON.stringify(model).replace(/</g,'\\u003c')+';');
+// Fully opened pocket leaves are concealed inside the wall, even in cutaway views.
+renderer=renderer.replace("if(inspect.checked&&b.group==='r18_door')continue;", "if(doorControl.checked&&b.door_id&&doorMap[b.door_id]?.type==='pocket')continue;\n if(inspect.checked&&b.group==='r18_door')continue;");
 renderer=renderer.replace('function pointVisible(p){','let activeRoom=null;\nfunction pointVisible(p){if(activeRoom&&p.room!==activeRoom)return false;');
 renderer=renderer.replace(".concat(rv?[{name:'View floor',group:'floor',min:[rv.b[0],rv.b[1],-.06],max:[rv.b[2],rv.b[3],0],color:'#c5bba6'}]:[])",'.concat(roomFloor(rv))');
 renderer=renderer.replace("if(inspect.checked&&b.group==='r18_door')continue;","if(focus==='hall'&&b.max[0]<-.10&&b.max[1]<-1.30)continue;\n if(inspect.checked&&b.group==='r18_door')continue;");

@@ -5,7 +5,14 @@ assert(!html.includes('data-view='),'Legacy view controls must be removed');
 assert(!html.includes('id="room-note"'),'Working notes must be removed');
 assert(!html.includes('Pracovní návrh'),'Draft badge must be removed');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
-const model=JSON.parse(fs.readFileSync(__dirname+'/apartment-model.json','utf8'));
+const model=require('./model-updates.cjs')(JSON.parse(fs.readFileSync(__dirname+'/apartment-model.json','utf8')));
+const wcDoor=model.doors.items.find(d=>d.id==='DV7');
+assert.equal(wcDoor.type,'pocket');assert.equal(wcDoor.angle,0);
+for(const box of model.boxes.filter(b=>b.door_id==='DV7')){
+ assert(box.min[0]+wcDoor.slide[0]>=wcDoor.pocket_bounds[0][0]);
+ assert(box.max[0]+wcDoor.slide[0]<=wcDoor.pocket_bounds[1][0]);
+ assert(box.min[1]>=wcDoor.pocket_bounds[0][1]&&box.max[1]<=wcDoor.pocket_bounds[1][1]);
+}
 for(const width of [360,900]){
  const elements=new Map(),events={};
  for(const tag of html.matchAll(/<(input|select|button)\b[^>]*>/g)){
