@@ -1,0 +1,253 @@
+<div id="apartment-doors-v20">
+  <div class="viz-row" style="justify-content:space-between;gap:12px">
+    <span class="tabular-nums">Byt · hudba, rostliny a vybavení</span>
+    <div class="viz-row">
+      <button type="button" class="btn" data-view="ac">Trasy potrubí</button>
+<button type="button" class="btn" data-view="balcony">Lodžie a rolety</button>
+<button type="button" class="btn" data-view="iso">Celý byt</button>
+      <button type="button" class="btn" data-view="office">Pracovna</button>
+<button type="button" class="btn" data-view="children">Dětský pokoj</button>
+<button type="button" class="btn" data-view="bedroom">Ložnice</button>
+<button type="button" class="btn" data-view="entry">Šatna a vstup</button>
+<button type="button" class="btn" data-view="dw">Myčka u dřezu</button>
+<button type="button" class="btn" data-view="kitchen">Kuchyň</button>
+      <button type="button" class="btn" data-view="rear">Podhled</button>
+      <button type="button" class="btn" data-view="cinema">Promítání</button>
+      <button type="button" class="btn" data-view="corner">Rohová skříňka</button>
+      <button type="button" class="btn" data-view="bath">Koupelna</button>
+      <button type="button" class="btn" data-view="plan">Půdorys</button>
+    </div>
+  </div>
+  <div class="viz-controls">
+      <label class="form-label">Vrstva<select class="form-select" data-service-layer>
+        <option value="light">Světla</option><option value="practical" selected>Praktické doplnění</option><option value="interior">Interiér</option>
+        <option value="socket">Zásuvky a vypínače</option><option value="electric">Elektrotrasy</option>
+        <option value="water">Voda a odpady</option><option value="hood">Odtah — podmíněná varianta</option>
+        <option value="data">Data a propojení klimatizací</option></select></label>
+      <label class="form-label">Bod<select class="form-select" data-service-point aria-label="Bod instalace"></select></label>
+    </div>
+    <div class="text-small">Varianta: myčka pod troubou — kombinace zatím neschválena výrobci.</div>
+<div class="text-small" data-service-detail aria-live="polite"></div>
+    <div class="text-small" data-service-legend></div>
+    <canvas role="img" aria-label="Otáčivý model celého bytu podle DXF s pokoji, chodbou, koupelnou a WC: kuchyň s poloostrovem a luxferovým čelem, stůl se čtyřmi židlemi a rohová sedačka." style="display:block;width:100%;height:clamp(280px,64vw,470px);touch-action:none;cursor:grab"></canvas>
+  <div class="viz-row" style="justify-content:space-between;gap:12px">
+    <label class="form-check"><input class="form-check-input" data-cut type="checkbox" checked><span class="form-check-label">Snížit stěny v celkovém pohledu</span></label>
+    <label class="form-check"><input class="form-check-input" data-kitchen type="checkbox" checked><span class="form-check-label">Nábytek a kuchyň</span></label>
+  </div>
+  <label class="form-check"><input class="form-check-input" data-doors type="checkbox"><span class="form-check-label">Otevřít dveře (vytáhne plátno)</span></label>
+<label class="form-check"><input class="form-check-input" data-keyboard type="checkbox"><span class="form-check-label">Keyboard místo gauče</span></label>
+<label class="form-check"><input class="form-check-input" data-laundry type="checkbox"><span class="form-check-label">Vysunout prádlo</span></label>
+<label class="form-check"><input class="form-check-input" data-bins type="checkbox"><span class="form-check-label">Vysunout koše</span></label>
+<label class="form-check"><input class="form-check-input" data-inspect type="checkbox"><span class="form-check-label">Odkrýt skříně</span></label>
+<label class="form-check"><input class="form-check-input" data-open type="checkbox"><span class="form-check-label">Otevřít myčku — návrh 45 cm</span></label>
+  <div class="viz-row">
+    <label class="form-check"><input class="form-check-input" data-ceiling type="checkbox"><span class="form-check-label">Zobrazit celý podhled</span></label>
+    <label class="form-check"><input class="form-check-input" data-screen type="checkbox"><span class="form-check-label">Stáhnout plátno</span></label>
+  </div>
+  <div class="viz-row">
+      <label class="form-check"><input class="form-check-input" type="checkbox" data-hvac><span class="form-check-label">Ukázat trubky a kabeláž</span></label>
+      <label class="form-check"><input class="form-check-input" type="checkbox" data-shutters><span class="form-check-label">Stáhnout venkovní rolety</span></label>
+    </div>
+    <div data-ac-legend class="text-small">Čtyři samostatná propojení s venkovní jednotkou — bez vzduchovodů.<br>Prostorový koncept. Odvod kondenzátu a montážní odstupy nutno dořešit.</div>
+    <span class="sr-only">Tažením model otáčíte, kolečkem přibližujete. Výšky parapetu a otvorů jsou pracovní předpoklad.</span>
+</div>
+<script>
+(() => {
+const root=document.getElementById('apartment-doors-v20');
+const model=__MODEL_JSON__;
+const canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d');
+const cut=root.querySelector('[data-cut]'), kitchen=root.querySelector('[data-kitchen]'),openDW=root.querySelector('[data-open]');
+const ceiling=root.querySelector('[data-ceiling]'),screen=root.querySelector('[data-screen]');
+const hvac=root.querySelector('[data-hvac]'),shutters=root.querySelector('[data-shutters]'),acLegend=root.querySelector('[data-ac-legend]');
+const svcLayer=root.querySelector('[data-service-layer]'),svcPoint=root.querySelector('[data-service-point]'),svcDetail=root.querySelector('[data-service-detail]'),svcLegend=root.querySelector('[data-service-legend]');
+const svc={...model.services,points:[...model.services.points,...model.finishing.items]};
+const modes={practical:['practical'],light:['light'],interior:['light'],socket:['socket','switch','board'],electric:['socket','switch','board','light'],water:['cold','hot','waste','marker'],hood:['hood','marker'],data:['data','marker']};
+function pointVisible(p){if(!modes[svcLayer.value].includes(p.kind))return false;if(p.kind==='marker')return svcLayer.value==='hood'?p.id==='H02':svcLayer.value==='water'?p.id==='V00':p.id.startsWith('K-');return true;}
+function serviceVisible(group){if(!group.startsWith('svc_'))return true;return ['light','socket','switch','board','marker','hood','cold','hot','waste','data'].some(k=>group==='svc_'+k&&modes[svcLayer.value].includes(k));}
+function populatePoints(){svcPoint.innerHTML='<option value="">Všechny body vrstvy</option>'+svc.points.filter(pointVisible).map(p=>'<option value="'+p.id+'">'+p.id+' · '+svc.rooms[p.room]+' · '+p.label+'</option>').join('');svcPoint.value='';}
+populatePoints();
+const doorControl=root.querySelector('[data-doors]');const doorMap=Object.fromEntries(model.doors.items.map(d=>[d.id,d]));
+const keyboard=root.querySelector('[data-keyboard]'),laundry=root.querySelector('[data-laundry]');
+const bins=root.querySelector('[data-bins]'),inspect=root.querySelector('[data-inspect]');
+const roomViews={office:{b:[-3.60,0,-.10,3.45],c:[-1.85,1.72,1.1],a:-2.1,e:.72,room:'PR'},children:{b:[-4.73,-3.60,-1.23,-.15],c:[-2.98,-1.875,1.0],a:-2.1,e:.72,room:'PO'},bedroom:{b:[3.15,-3.60,5.87,-.15],c:[4.51,-1.875,1.1],a:1.2,e:.73,room:'LO'}};
+let az=-Math.PI/2,el=Math.PI/2,zoom=1,drag=null,focus=false;openDW.checked=false;
+const {width:W,depth:D,height:H}=model.room; const [AX,AY,BX,BY]=model.apartment_bounds;
+const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+const sideNormal={south:[0,-1,0],north:[0,1,0],west:[-1,0,0],east:[1,0,0]};
+const faces=[[[0,1,5,4],[0,-1,0]],[[1,2,6,5],[1,0,0]],[[2,3,7,6],[0,1,0]],[[3,0,4,7],[-1,0,0]],[[4,5,6,7],[0,0,1]],[[3,2,1,0],[0,0,-1]]];
+const meshTriangles=[];
+function splitTri(v,n,color,group){meshTriangles.push({v,n,color,group});}
+for(const m of model.meshes){for(const f of m.faces){const v=f.map(i=>m.vertices[i]);const a=v[1].map((x,k)=>x-v[0][k]),b=v[2].map((x,k)=>x-v[0][k]);let n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];const l=Math.hypot(...n);if(l<1e-10)continue;n=n.map(x=>x/l);splitTri(v,n,m.color,m.name.startsWith(model.music_variant.hide_mesh_prefix)?'variant_sofa':m.group);}}
+function draw(){
+ const rv=roomViews[focus];
+ if(acLegend)acLegend.hidden=!hvac.checked;
+ const css=getComputedStyle(root), fg=css.getPropertyValue('--foreground').trim()||'#232323',bg=css.getPropertyValue('--background').trim()||'#faf9f6', muted=css.getPropertyValue('--border').trim()||'#b8b8b3';
+ const w=canvas.clientWidth,h=canvas.clientHeight,ratio=Math.min(2,Math.max(1.5,window.devicePixelRatio||1));
+ if(canvas.width!==Math.round(w*ratio)||canvas.height!==Math.round(h*ratio)){canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);}
+ ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,w,h);
+ const eye=[Math.cos(el)*Math.cos(az),Math.cos(el)*Math.sin(az),Math.sin(el)];
+ const right=[-Math.sin(az),Math.cos(az),0],up=[-Math.sin(el)*Math.cos(az),-Math.sin(el)*Math.sin(az),Math.cos(el)];
+ const center=rv?rv.c:focus==='entry'?[-.10,-2.48,1.05]:focus==='balcony'?[-4.35,1.60,1.20]:focus==='bath'?[2.13,-1.35,1.20]:focus==='cinema'?[4.80,1.65,1.25]:focus==='corner'?[3.25,.50,.80]:focus==='ceiling'?[3.35,.8,2.1]:focus?[2.52,.9,1.0]:[(AX+BX)/2,(AY+BY)/2,.65];
+ const raw=p=>{const q=p.map((v,i)=>v-center[i]);return [dot(q,right),-dot(q,up),dot(q,eye)];};
+ const bounds=[];for(const x of (rv?[rv.b[0]-.1,rv.b[2]+.1]:focus==='entry'?[-1.3,1.3]:focus==='balcony'?[-5.3,-3.35]:focus==='bath'?[1.1,3.2]:focus==='cinema'?[3.65,5.98]:focus==='corner'?[2.7,4.0]:focus==='ceiling'?[2.55,3.95]:focus?[.88,3.88]:[AX-.35,BX+.35]))for(const y of (rv?[rv.b[1]-.1,rv.b[3]+.1]:focus==='entry'?[-3.8,-1.2]:focus==='balcony'?[-.35,3.75]:focus==='bath'?[-2.7,.05]:focus==='cinema'?[-.15,3.55]:focus==='corner'?[-.05,1.35]:focus==='ceiling'?[-.05,1.8]:focus?[-.05,2.2]:[AY-.35,BY+.35]))for(const z of (rv?[0,2.5]:focus==='entry'?[0,2.5]:focus==='balcony'?[-.10,2.65]:focus==='bath'?[0,2.7]:focus==='cinema'?[0,2.5]:focus==='corner'?[0,1.5]:focus==='ceiling'?[1.3,2.67]:focus?[0,2.67]:[-.1,H]))bounds.push(raw([x,y,z]));
+ const x0=Math.min(...bounds.map(p=>p[0])),x1=Math.max(...bounds.map(p=>p[0])),y0=Math.min(...bounds.map(p=>p[1])),y1=Math.max(...bounds.map(p=>p[1]));
+ const scale=Math.min((w-18)/(x1-x0),(h-20)/(y1-y0))*zoom;
+ const project=p=>{const q=raw(p);return [w/2+(q[0]-(x0+x1)/2)*scale,h/2+(q[1]-(y0+y1)/2)*scale,q[2]];};
+ const polys=[];
+ for(const b of model.boxes.concat(keyboard.checked?model.music_variant.boxes:[]).concat(rv?[{name:'View floor',group:'floor',min:[rv.b[0],rv.b[1],-.06],max:[rv.b[2],rv.b[3],0],color:'#c5bba6'}]:[])){if(rv&&b.group==='floor'&&b.name!=='View floor')continue;
+ if(inspect.checked&&b.group==='r18_door')continue;
+ if(inspect.checked&&b.name.startsWith('Satna ')&&(/ bok | zada| vodorovna /.test(b.name)))continue;
+ if(rv&&(b.max[0]<rv.b[0]-.06||b.min[0]>rv.b[2]+.06||b.max[1]<rv.b[1]-.06||b.min[1]>rv.b[3]+.06))continue;
+ 
+      if(b.group==='finish_internal'&&svcLayer.value!=='practical')continue;
+      if(svcLayer.value==='practical'&&model.finishing.hide_for_inspection.some(n=>b.name.startsWith(n)))continue;
+      if(focus==='entry'&&(b.max[0]<-1.3||b.min[0]>1.3||b.max[1]<-3.8||b.min[1]>-1.2))continue;
+     if(focus==='dw'&&(b.max[0]<1.0||b.min[0]>3.75||b.max[1]<-.02||b.min[1]>2.03||b.group==='wall'))continue; if(!serviceVisible(b.group))continue;
+      if(b.group==='shutter_curtain'&&!shutters.checked)continue;
+      if(b.group==='ac_soffit'&&(!ceiling.checked||hvac.checked))continue;
+      if(['ac_supply','ac_return','ac_pipe','ac_drain','ac_service'].includes(b.group)&&!hvac.checked)continue;
+      if(focus==='balcony'&&(b.max[0]<-5.3||b.min[0]>-3.35||b.max[1]<-.35||b.min[1]>3.75))continue;
+     if(focus==='bath'&&(b.max[0]<1.15||b.min[0]>3.16||b.max[1]<-2.7||b.min[1]>-.14))continue;
+   if(!kitchen.checked&&!['wall','floor','frame','glass'].includes(b.group))continue;
+   if(b.group==='ceiling'&&!ceiling.checked)continue;
+   if(!ceiling.checked&&['LuxeAir navrh tela','Platno zapustene pouzdro'].includes(b.name))continue;
+   if(b.group==='screen'&&!screen.checked)continue;
+   if(focus==='corner'&&b.min[2]>1.3)continue;
+   if(focus==='cinema'&&b.max[0]<3.7)continue;
+   if(focus==='ceiling'&&b.max[2]<1.3)continue;
+   const a=b.min.slice(),c=b.max.slice();if(laundry.checked&&b.assembly==='laundry'){a[1]-=.35;c[1]-=.35;}if(rv&&b.group==='floor'){a[0]=Math.max(a[0],rv.b[0]);a[1]=Math.max(a[1],rv.b[1]);c[0]=Math.min(c[0],rv.b[2]);c[1]=Math.min(c[1],rv.b[3]);if(c[0]<=a[0]||c[1]<=a[1])continue;}if(bins.checked&&b.assembly==='bins'){a[1]+=.42;c[1]+=.42;}if(rv&&cut.checked&&b.group==='wall')c[2]=Math.min(c[2],.35);if(focus==='entry'&&b.group==='wall')c[2]=Math.min(c[2],.35); if(focus==='bath'&&cut.checked&&['wall','bath_finish'].includes(b.group)&&((Math.cos(az)<0?c[0]<1.33:a[0]>2.94)||(Math.sin(az)<0?c[1]<-2.53:a[1]>-.17)))c[2]=Math.min(c[2],.35); if(cut.checked&&!focus&&b.group==='wall')c[2]=Math.min(c[2],.85); if(c[2]<=a[2])continue;
+   if(el>1.5&&b.group!=='floor'&&!b.group.startsWith('ac_')&&!b.group.startsWith('svc_')&&!['shutter','shutter_curtain','balcony','balcony_frame'].includes(b.group)){c[2]=Math.min(c[2],1.2);if(c[2]<=a[2])continue;}
+   if(cut.checked&&b.side&&dot(sideNormal[b.side],eye)>.03&&el<1.5){c[2]=Math.min(c[2],.35);if(c[2]<=a[2])continue;}
+   const v=[[a[0],a[1],a[2]],[c[0],a[1],a[2]],[c[0],c[1],a[2]],[a[0],c[1],a[2]],[a[0],a[1],c[2]],[c[0],a[1],c[2]],[c[0],c[1],c[2]],[a[0],c[1],c[2]]];
+   const door=doorControl.checked&&b.door_id?doorMap[b.door_id]:null;const da=door?door.angle*Math.PI/180:0,dc=Math.cos(da),ds=Math.sin(da);if(door){const [hx,hy]=door.hinge;for(const p of v){const x=p[0]-hx,y=p[1]-hy;p[0]=hx+x*dc-y*ds;p[1]=hy+x*ds+y*dc;}}
+const opened=openDW.checked&&b.group==='dishwasher_door';
+   if(opened){const [h,hz]=model.dishwasher_hinge;for(const p of v){const dz=p[2]-hz;if(model.dishwasher_open_axis==='x'){const dy=p[1]-h;p[1]=h+dz;p[2]=hz-dy;}else{const dx=p[0]-h;p[0]=h-dz;p[2]=hz+dx;}}}
+   for(const [indices,normal] of faces){
+    let n=opened?(model.dishwasher_open_axis==='x'?[normal[0],normal[2],-normal[1]]:[-normal[2],normal[1],normal[0]]):normal;
+    if(door)n=[n[0]*dc-n[1]*ds,n[0]*ds+n[1]*dc,n[2]];if(dot(n,eye)<.00001)continue;
+    const p0=v[indices[0]],p1=v[indices[1]],p3=v[indices[3]];
+    const du=p1.map((x,i)=>x-p0[i]),dv=p3.map((x,i)=>x-p0[i]);
+    const nu=1,nv=1;
+    const pt=(u,t)=>project(p0.map((x,i)=>x+du[i]*u+dv[i]*t));
+    for(let i=0;i<nu;i++)for(let j=0;j<nv;j++){
+      const pts=[pt(i/nu,j/nv),pt((i+1)/nu,j/nv),pt((i+1)/nu,(j+1)/nv),pt(i/nu,(j+1)/nv)];
+      polys.push({pts,depth:pts.reduce((s,p)=>s+p[2],0)/4,n,color:b.color});
+    }
+   }
+ }
+ if(kitchen.checked){for(const t of meshTriangles){if(keyboard.checked&&t.group==='variant_sofa')continue;if(rv&&t.group==='floor')continue;if(rv&&(Math.max(...t.v.map(p=>p[0]))<rv.b[0]-.06||Math.min(...t.v.map(p=>p[0]))>rv.b[2]+.06||Math.max(...t.v.map(p=>p[1]))<rv.b[1]-.06||Math.min(...t.v.map(p=>p[1]))>rv.b[3]+.06))continue; if(focus==='entry'&&(Math.max(...t.v.map(p=>p[0]))<-1.3||Math.min(...t.v.map(p=>p[0]))>1.3||Math.max(...t.v.map(p=>p[1]))<-3.8||Math.min(...t.v.map(p=>p[1]))>-1.2))continue; if(focus==='dw'&&(t.group==='wall'||Math.max(...t.v.map(p=>p[0]))<1.0||Math.min(...t.v.map(p=>p[0]))>3.75||Math.max(...t.v.map(p=>p[1]))<-.02||Math.min(...t.v.map(p=>p[1]))>2.03))continue; if(!serviceVisible(t.group))continue; if(focus==='balcony'&&(Math.min(...t.v.map(p=>p[0]))>-3.35||Math.max(...t.v.map(p=>p[1]))<-.35||Math.min(...t.v.map(p=>p[1]))>3.75))continue; if(focus==='bath'&&(Math.max(...t.v.map(p=>p[0]))<1.15||Math.min(...t.v.map(p=>p[0]))>3.16||Math.max(...t.v.map(p=>p[1]))<-2.7||Math.min(...t.v.map(p=>p[1]))>-.14))continue;
+   if(focus==='cinema'&&Math.max(...t.v.map(p=>p[0]))<3.7)continue;
+   if(focus==='corner'&&Math.min(...t.v.map(p=>p[2]))>1.3)continue;
+   if(focus==='ceiling'&&Math.max(...t.v.map(p=>p[2]))<1.3)continue;
+   if(el>1.5&&t.group==='hood')continue;
+   if(dot(t.n,eye)<.00001)continue;
+   if(el>1.5&&t.group!=='wall'&&t.group!=='ac_outdoor'&&!t.group.startsWith('svc_')&&Math.min(...t.v.map(p=>p[2]))>1.2)continue; const vv=((cut.checked&&(!focus||focus==='bath'||focus==='entry'||rv)||el>1.5)&&t.group==='wall')?t.v.map(p=>[p[0],p[1],Math.min(p[2],.85)]):t.v; const pts=vv.map(project);polys.push({pts,depth:pts.reduce((s,p)=>s+p[2],0)/3,n:t.n,color:t.color});
+ }}
+ // Orthographic software rasterizer with a real depth buffer.
+ const pw=canvas.width,ph=canvas.height;
+ const raster=ctx.createImageData(pw,ph),pix=raster.data,zbuf=new Float32Array(pw*ph);zbuf.fill(-1e20);
+ const edge=(a,b,x,y)=>(b[0]-a[0])*(y-a[1])-(b[1]-a[1])*(x-a[0]);
+ for(const p of polys){
+   const shade=.80+.20*Math.max(0,p.n[2])+.07*Math.max(0,-p.n[1]);
+   const rgb=[1,3,5].map(i=>Math.min(255,Math.round(parseInt(p.color.slice(i,i+2),16)*shade)));
+   const pts=p.pts.map(q=>[q[0]*ratio,q[1]*ratio,q[2]]);
+   for(let k=1;k<pts.length-1;k++){
+     const a=pts[0],b=pts[k],c=pts[k+1],area=edge(a,b,c[0],c[1]);if(Math.abs(area)<1e-8)continue;
+     const xlo=Math.max(0,Math.floor(Math.min(a[0],b[0],c[0]))),xhi=Math.min(pw-1,Math.ceil(Math.max(a[0],b[0],c[0])));
+     const ylo=Math.max(0,Math.floor(Math.min(a[1],b[1],c[1]))),yhi=Math.min(ph-1,Math.ceil(Math.max(a[1],b[1],c[1])));
+     for(let yy=ylo;yy<=yhi;yy++)for(let xx=xlo;xx<=xhi;xx++){
+       const u=edge(b,c,xx+.5,yy+.5)/area,v=edge(c,a,xx+.5,yy+.5)/area,t=1-u-v;
+       if(u<-.00001||v<-.00001||t<-.00001)continue;
+       const z=u*a[2]+v*b[2]+t*c[2],i=yy*pw+xx;if(z<=zbuf[i]+.0000001)continue;
+       zbuf[i]=z;const j=i*4;pix[j]=rgb[0];pix[j+1]=rgb[1];pix[j+2]=rgb[2];pix[j+3]=255;
+     }
+   }
+ }
+ ctx.putImageData(raster,0,0);
+    if(hvac.checked&&!focus&&el>1.5){
+      ctx.font='12px system-ui';ctx.textAlign='center';
+      for(const [name,p] of [['Pracovna',[-2.45,1.25,0]],['Pokoj',[-3.30,-2.30,0]],['Obývák',[4.45,1.60,0]],['Ložnice',[4.75,-1.80,0]],['Venkovní',[-4.45,2.80,2.55]]]){
+        const q=project(p),tw=ctx.measureText(name).width;ctx.fillStyle=bg;ctx.fillRect(q[0]-tw/2-4,q[1]-9,tw+8,18);ctx.fillStyle=fg;ctx.fillText(name,q[0],q[1]+4);
+      }
+    }
+ 
+    const selected=svc.points.find(p=>p.id===svcPoint.value);
+    svcDetail.textContent=selected?selected.id+' · '+selected.label+' · '+selected.xyz[2].toFixed(2)+' m · '+selected.status+(selected.control?' · ovládání '+selected.control:'')+' — '+selected.note:'Prostorový koncept, ne prováděcí projekt · vyber bod pro výšku a podmínky.';
+    const desc={practical:'DOP = návrh vybavení · čela lze odkrýt · koše lze vysunout · Ooni není osazena',light:'L = světlo · typ a ovládání v detailu bodu',interior:'Myčka 45 cm pod troubou · dřez a poloostrov beze změny · původní místo myčky: zásuvky',socket:'Z = připojení · S = vypínač · R01 = rozvaděč · E00 = přívod · ! = nutno posoudit · Z30 STOP',electric:'Vybraný bod ukáže svou větev · vedení podhledem, svisle v instalačních kanálech · Z30 bez trasy',water:'SV plná · TV čárkovaná · odpad tečkovaný → ke stoupačce · SPÁD NEOVĚŘEN',hood:'Varianta končí H02 NEPŘIPOJENA · nejde o napojení na kanalizaci',data:'Datová hvězdice + AV · AC = propojení podle výrobce, nikoli odtok kondenzátu'};
+    svcLegend.textContent=desc[svcLayer.value];
+    if(svcLayer.value!=='interior'){
+      const palette={practical:'--viz-series-3',electric:'--viz-series-1',cold:'--viz-series-1',hot:'--viz-series-2',waste:'--viz-series-3',hood:'--viz-series-4',data:'--viz-series-5',light:'--viz-series-2',socket:'--viz-series-1',switch:'--viz-series-5',board:'--viz-series-4',marker:'--viz-series-4'};
+      const colour=k=>css.getPropertyValue(palette[k]||'--foreground').trim()||fg;
+      const visibleRoutes=svc.routes.filter(r=>svcLayer.value==='electric'?r.kind==='electric':svcLayer.value==='water'?['cold','hot','waste'].includes(r.kind):svcLayer.value==='hood'?r.kind==='hood':svcLayer.value==='data'?r.kind==='data':false);
+      for(const r of visibleRoutes){
+        if(selected&&svcLayer.value==='electric'&&r.end!==selected.id&&r.id!=='E-'+selected.room&&r.id!=='E00-R01')continue;
+        if(selected&&svcLayer.value==='data'&&r.end!==selected.id&&r.start!==selected.id)continue;
+        const path=r.path.map(project);ctx.strokeStyle=colour(r.kind);ctx.lineWidth=r.kind==='hood'?3:1.5;
+        ctx.globalAlpha=selected||svcLayer.value!=='electric'?.92:.50;
+        ctx.setLineDash(r.kind==='hot'?[6,3]:r.kind==='waste'?[2,3]:r.kind==='hood'?[8,4]:[]);
+        ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();ctx.setLineDash([]);
+        if(r.kind==='waste'&&path.length>1){const a=path[path.length-2],b=path[path.length-1],angle=Math.atan2(b[1]-a[1],b[0]-a[0]);ctx.beginPath();ctx.moveTo(b[0]-6*Math.cos(angle-.5),b[1]-6*Math.sin(angle-.5));ctx.lineTo(b[0],b[1]);ctx.lineTo(b[0]-6*Math.cos(angle+.5),b[1]-6*Math.sin(angle+.5));ctx.stroke();}
+      }
+      ctx.globalAlpha=1;ctx.font='12px system-ui';ctx.textAlign='left';
+      const labelBoxes=[];
+      for(const p of svc.points.filter(pointVisible).sort((a,b)=>(b.id===svcPoint.value)-(a.id===svcPoint.value))){
+        if(rv&&p.room!==rv.room)continue;if(focus==='entry'&&!['SA','CH'].includes(p.room))continue;if(focus==='bath'&&p.room!=='KO')continue;if(focus==='balcony'&&p.room!=='BA')continue;
+        if(selected&&p.id!==selected.id&&svcLayer.value==='electric'&&!['E00','R01'].includes(p.id))continue;
+        const q=project(p.xyz),active=selected&&p.id===selected.id;ctx.strokeStyle=colour(p.kind);ctx.fillStyle=bg;ctx.lineWidth=active?3:1.5;
+        ctx.beginPath();ctx.arc(q[0],q[1],active?6:3.5,0,Math.PI*2);ctx.fill();ctx.stroke();
+        if(active||w>600&&el>1.5){
+          const label=p.id+(p.status.startsWith('HOLD')?'!':''),tw=ctx.measureText(label).width;
+          let chosen=null;
+          for(const dy of [-5,15,-23,33,-41,51]){
+            for(const dx of [7,-tw-7]){
+              const x=Math.min(w-tw-4,Math.max(4,q[0]+dx)),y=Math.min(h-8,Math.max(14,q[1]+dy)),rect=[x-2,y-12,x+tw+2,y+3];
+              if(!labelBoxes.some(b=>rect[0]<b[2]+3&&rect[2]>b[0]-3&&rect[1]<b[3]+3&&rect[3]>b[1]-3)){chosen={x,y,rect};break;}
+            }if(chosen)break;
+          }
+          if(chosen){const {x,y,rect}=chosen;labelBoxes.push(rect);ctx.strokeStyle=fg;ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(q[0],q[1]);ctx.lineTo(Math.max(rect[0],Math.min(rect[2],q[0])),Math.max(rect[1],Math.min(rect[3],q[1])));ctx.stroke();ctx.fillStyle=bg;ctx.fillRect(rect[0],rect[1],rect[2]-rect[0],rect[3]-rect[1]);ctx.fillStyle=fg;ctx.fillText(label,x,y);}
+        }
+      }
+    }
+    
+ function dimension(p,q,text){const a=project(p),b=project(q);ctx.strokeStyle=fg;ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy);const nx=-dy/len*4,ny=dx/len*4;for(const v of [a,b]){ctx.moveTo(v[0]-nx,v[1]-ny);ctx.lineTo(v[0]+nx,v[1]+ny);}ctx.stroke();const x=(a[0]+b[0])/2,y=(a[1]+b[1])/2;ctx.font='12px system-ui';const tw=ctx.measureText(text).width;ctx.fillStyle=bg;ctx.fillRect(x-tw/2-4,y-10,tw+8,19);ctx.fillStyle=fg;ctx.textAlign='center';ctx.fillText(text,x,y+4);}
+ if(el>1.5&&!focus){dimension([AX,AY-.20,0],[BX,AY-.20,0],'11,13 m');dimension([BX+.20,AY,0],[BX+.20,BY,0],'7,45 m');}
+}
+canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing';});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;az-=(e.clientX-drag.x)*.008;el=Math.max(-.3,Math.min(1.57,el+(e.clientY-drag.y)*.006));drag={x:e.clientX,y:e.clientY};draw();});
+const release=()=>{drag=null;canvas.style.cursor='grab';};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.65,Math.min(1.8,zoom*Math.exp(-e.deltaY*.001)));draw();},{passive:false});
+root.querySelector('[data-view="iso"]').onclick=()=>{az=-.70;el=.90;zoom=1;focus=false;ceiling.checked=false;draw();};
+root.querySelector('[data-view="plan"]').onclick=()=>{az=-Math.PI/2;el=Math.PI/2;zoom=1;focus=false;draw();};
+root.querySelector('[data-view="kitchen"]').onclick=()=>{az=1.90;el=.50;zoom=1;focus=true;kitchen.checked=true;ceiling.checked=false;draw();};
+root.querySelector('[data-view="rear"]').onclick=()=>{az=1.90;el=-.25;zoom=1;focus='ceiling';ceiling.checked=true;draw();};
+root.querySelector('[data-view="cinema"]').onclick=()=>{az=1.80;el=.30;zoom=1;focus='cinema';ceiling.checked=false;screen.checked=true;draw();};
+root.querySelector('[data-view="corner"]').onclick=()=>{az=.65;el=.40;zoom=1;focus='corner';ceiling.checked=false;screen.checked=false;openDW.checked=false;draw();};
+const bathButton=root.querySelector('[data-view="bath"]');if(bathButton)bathButton.onclick=()=>{az=-.85;el=.72;zoom=1;focus='bath';ceiling.checked=false;draw();};
+const acButton=root.querySelector('[data-view="ac"]'),balconyButton=root.querySelector('[data-view="balcony"]');
+    if(acButton)acButton.onclick=()=>{focus=false;az=-Math.PI/2;el=Math.PI/2;zoom=1;hvac.checked=true;ceiling.checked=false;cut.checked=true;draw();};
+    if(balconyButton)balconyButton.onclick=()=>{focus='balcony';az=-2.60;el=.40;zoom=1;hvac.checked=false;ceiling.checked=false;cut.checked=false;shutters.checked=true;draw();};
+    hvac.onchange=draw;shutters.onchange=draw;
+    root.querySelector('[data-view="iso"]').onclick=()=>{focus=false;az=-.85;el=.95;zoom=1;hvac.checked=false;ceiling.checked=false;cut.checked=true;draw();};
+    svcLayer.onchange=()=>{populatePoints();focus=false;zoom=1;hvac.checked=false;ceiling.checked=false;cut.checked=true;if(svcLayer.value==='interior'){az=-.85;el=.95;}else{az=-Math.PI/2;el=Math.PI/2;}draw();};
+    svcPoint.onchange=()=>{
+      const p=svc.points.find(p=>p.id===svcPoint.value);
+      if(svcLayer.value==='practical'&&p){
+        if(p.room==='BA'){focus='balcony';az=-2.60;el=.40;zoom=1;}
+        else if(['SA','CH'].includes(p.room)){focus='entry';az=-.70;el=.60;zoom=1;}
+        else if(['PR','PO','LO'].includes(p.room)){focus={PR:'office',PO:'children',LO:'bedroom'}[p.room];az=roomViews[focus].a;el=roomViews[focus].e;zoom=1;}else if(p.room==='OB'){focus=true;az=1.90;el=.50;zoom=1;}
+        else if(p.room==='KO'){focus='bath';az=-.85;el=.72;zoom=1;}
+      }draw();
+    };
+    root.querySelector('[data-view="dw"]').onclick=()=>{az=1.40;el=.48;zoom=1;focus='dw';svcLayer.value='interior';populatePoints();openDW.checked=true;ceiling.checked=false;hvac.checked=false;draw();};
+root.querySelector('[data-view="entry"]').onclick=()=>{focus='entry';az=-.70;el=.60;zoom=1;svcLayer.value='practical';populatePoints();ceiling.checked=false;cut.checked=true;draw();};
+doorControl.onchange=()=>{if(doorControl.checked)screen.checked=false;draw();};
+keyboard.onchange=()=>{focus='office';az=roomViews.office.a;el=roomViews.office.e;zoom=1;svcLayer.value='interior';populatePoints();draw();};
+ laundry.onchange=()=>{focus='entry';az=-.70;el=.60;zoom=1;draw();};
+ bins.onchange=draw;inspect.onchange=draw;
+ for(const key of Object.keys(roomViews))root.querySelector('[data-view="'+key+'"]').onclick=()=>{focus=key;az=roomViews[key].a;el=roomViews[key].e;zoom=1;ceiling.checked=false;cut.checked=true;svcLayer.value='interior';populatePoints();draw();};
+ cut.onchange=draw;kitchen.onchange=draw;openDW.onchange=draw;ceiling.onchange=draw;screen.onchange=draw;
+new ResizeObserver(draw).observe(canvas);
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});
+draw();
+})();
+</script>
