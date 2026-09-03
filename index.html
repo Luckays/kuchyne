@@ -3,10 +3,10 @@
 </style></head>
 <body><a class="skip" href="#workspace">Přejít k modelu</a>
 <div id="apartment-doors-v20" class="app">
-<aside class="sidebar"><a class="brand" href="#all"><span class="brand-mark">⌂</span><span>Náš byt<small>NÁVRH INTERIÉRU</small></span></a><p class="nav-label">Místnosti</p><nav id="rooms" aria-label="Místnosti bytu"></nav><div class="sidebar-foot"><span class="version">Model · revize 20</span><p>Podle půdorysu DXF.<br>Rozměry a instalace jsou návrhové.</p></div></aside>
-<main id="workspace"><header class="page-head"><div><p class="eyebrow">DOMOV / <span id="breadcrumb">CELÝ BYT</span></p><h1 id="room-title">Celý byt</h1></div><span class="draft">Pracovní návrh</span></header>
+<aside class="sidebar"><a class="brand" href="#all"><span class="brand-mark">⌂</span><span>Náš byt<small>NÁVRH INTERIÉRU</small></span></a><p class="nav-label">Místnosti</p><nav id="rooms" aria-label="Místnosti bytu"></nav></aside>
+<main id="workspace"><header class="page-head"><div><p class="eyebrow">DOMOV / <span id="breadcrumb">CELÝ BYT</span></p><h1 id="room-title">Celý byt</h1></div></header>
 <div class="work-grid"><section class="viewer-card" aria-label="Model bytu"><div class="viewer-toolbar"><div class="segmented" aria-label="Pohled"><button id="view-3d" aria-pressed="true">3D pohled</button><button id="view-plan" aria-pressed="false">Půdorys</button></div><button id="reset-view" class="quiet">Obnovit pohled</button></div><div class="canvas-wrap"><canvas tabindex="0" role="img" aria-label="Interaktivní model bytu. Šipkami otáčejte, plus a minus přibližují."></canvas><div class="zoom-tools"><button id="zoom-in" aria-label="Přiblížit">+</button><button id="zoom-out" aria-label="Oddálit">−</button></div></div><div class="viewer-bottom"><span id="view-caption">Celý byt</span><span>Tažením otáčej · + / − přibližuj</span></div><div class="quick-controls"><label><input data-cut type="checkbox" checked> Snížit stěny</label><label><input data-kitchen type="checkbox" checked> Nábytek</label><label><input data-doors type="checkbox"> Otevřít dveře</label></div><p id="load-status" role="status">Načítám model…</p></section>
-<aside class="room-card" aria-labelledby="overview-title"><p class="eyebrow">PŘEHLED MÍSTNOSTI</p><h2 id="overview-title">Prostor pro každý den</h2><p id="room-description"></p><div id="materials" class="materials"></div><h3>Co je v návrhu</h3><ul id="furniture-list" class="item-list"></ul><div id="room-note" class="note"></div></aside></div>
+<aside class="room-card" aria-labelledby="overview-title"><p class="eyebrow">PŘEHLED MÍSTNOSTI</p><h2 id="overview-title">Prostor pro každý den</h2><p id="room-description"></p><div id="materials" class="materials"></div><h3>Vybavení</h3><ul id="furniture-list" class="item-list"></ul></aside></div>
 <div class="details-grid"><details class="panel" open><summary>Vyzkoušet v modelu</summary><div id="room-options" class="options">
 <label data-for="office"><input data-keyboard type="checkbox"> Keyboard místo gauče</label>
 <label data-for="wardrobe hall"><input data-laundry type="checkbox"> Vysunout koš na prádlo</label>
@@ -16,9 +16,8 @@
 <label><input data-inspect type="checkbox"> Odkrýt čela skříní</label>
 <label><input data-ceiling type="checkbox"> Zobrazit podhled</label>
 <label data-for="living office children bedroom balcony"><input data-shutters type="checkbox"> Stáhnout venkovní rolety</label>
-</div><p class="small">Otevření dveří automaticky vytáhne plátno zasahující do průchodu.</p></details>
-<details class="panel" id="technical"><summary>Světla a technické rozvody</summary><div class="technical-fields"><label>Vrstva<select data-service-layer><option value="interior" selected>Interiér bez značek</option><option value="practical">Vybavení a detaily</option><option value="light">Světla</option><option value="socket">Zásuvky a vypínače</option><option value="electric">Elektrotrasy</option><option value="water">Voda a odpady</option><option value="hood">Odtah – podmíněná varianta</option><option value="data">Data a klimatizace</option></select></label><label>Bod v této místnosti<select data-service-point aria-label="Bod instalace"></select></label></div><p data-service-detail class="small" aria-live="polite"></p><p data-service-legend class="small"></p><label class="check"><input type="checkbox" data-hvac> Ukázat potrubí klimatizace</label><p data-ac-legend class="small">Čtyři nástěnné jednotky. Odvod kondenzátu a montážní odstupy nejsou ověřené.</p><p class="note">Prostorový koncept, nikoli prováděcí projekt. Odtah není schválené napojení na šachtu; koupelnové elektro a spády vyžadují odborné ověření.</p></details></div>
-<details class="panel detail-views"><summary>Detailní pohledy původního modelu</summary><div class="legacy-views"><button type="button" data-view="ac">Trasy potrubí</button><button type="button" data-view="balcony">Lodžie a rolety</button><button type="button" data-view="iso">Celý byt</button><button type="button" data-view="office">Pracovna</button><button type="button" data-view="children">Dětský pokoj</button><button type="button" data-view="bedroom">Ložnice</button><button type="button" data-view="entry">Šatna a vstup</button><button type="button" data-view="dw">Myčka u dřezu</button><button type="button" data-view="kitchen">Kuchyň</button><button type="button" data-view="rear">Podhled</button><button type="button" data-view="cinema">Promítání</button><button type="button" data-view="corner">Rohová skříňka</button><button type="button" data-view="bath">Koupelna</button><button type="button" data-view="plan">Půdorys</button></div></details>
+</div></details>
+<details class="panel" id="technical"><summary>Světla a technické rozvody</summary><div class="technical-fields"><label>Vrstva<select data-service-layer><option value="interior" selected>Interiér bez značek</option><option value="practical">Vybavení a detaily</option><option value="light">Světla</option><option value="socket">Zásuvky a vypínače</option><option value="electric">Elektrotrasy</option><option value="water">Voda a odpady</option><option value="hood">Odtah</option><option value="data">Data a klimatizace</option></select></label><label>Bod v této místnosti<select data-service-point aria-label="Bod instalace"></select></label></div><p data-service-detail class="small" aria-live="polite"></p><p data-service-legend class="small"></p><label class="check"><input type="checkbox" data-hvac> Ukázat potrubí klimatizace</label></details></div>
 <footer>Náš byt · dispoziční a materiálový návrh <span>Dub / sklo / kámen</span></footer>
 </main></div><script>
 (() => {
@@ -27,7 +26,7 @@ const model={"version":20,"units":"metres","room":{"width":5.86999859041066,"dep
 const canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d');
 const cut=root.querySelector('[data-cut]'), kitchen=root.querySelector('[data-kitchen]'),openDW=root.querySelector('[data-open]');
 const ceiling=root.querySelector('[data-ceiling]'),screen=root.querySelector('[data-screen]');
-const hvac=root.querySelector('[data-hvac]'),shutters=root.querySelector('[data-shutters]'),acLegend=root.querySelector('[data-ac-legend]');
+const hvac=root.querySelector('[data-hvac]'),shutters=root.querySelector('[data-shutters]');
 const svcLayer=root.querySelector('[data-service-layer]'),svcPoint=root.querySelector('[data-service-point]'),svcDetail=root.querySelector('[data-service-detail]'),svcLegend=root.querySelector('[data-service-legend]');
 const svc={...model.services,points:[...model.services.points,...model.finishing.items]};
 const modes={practical:['practical'],light:['light'],interior:['light'],socket:['socket','switch','board'],electric:['socket','switch','board','light'],water:['cold','hot','waste','marker'],hood:['hood','marker'],data:['data','marker']};
@@ -50,7 +49,7 @@ function splitTri(v,n,color,group){meshTriangles.push({v,n,color,group});}
 for(const m of model.meshes){for(const f of m.faces){const v=f.map(i=>m.vertices[i]);const a=v[1].map((x,k)=>x-v[0][k]),b=v[2].map((x,k)=>x-v[0][k]);let n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];const l=Math.hypot(...n);if(l<1e-10)continue;n=n.map(x=>x/l);splitTri(v,n,m.color,m.name.startsWith(model.music_variant.hide_mesh_prefix)?'variant_sofa':m.group);}}
 function draw(){
  const rv=roomViews[focus];
- if(acLegend)acLegend.hidden=!hvac.checked;
+
  const css=getComputedStyle(root), fg=css.getPropertyValue('--foreground').trim()||'#232323',bg=css.getPropertyValue('--background').trim()||'#faf9f6', muted=css.getPropertyValue('--border').trim()||'#b8b8b3';
  const w=canvas.clientWidth,h=canvas.clientHeight,ratio=Math.min(1.5,window.devicePixelRatio||1);
  if(canvas.width!==Math.round(w*ratio)||canvas.height!==Math.round(h*ratio)){canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);}
@@ -143,8 +142,8 @@ const opened=openDW.checked&&b.group==='dishwasher_door';
     }
 
     const selected=svc.points.find(p=>p.id===svcPoint.value);
-    svcDetail.textContent=selected?selected.id+' · '+selected.label+' · '+selected.xyz[2].toFixed(2)+' m · '+selected.status+(selected.control?' · ovládání '+selected.control:'')+' — '+selected.note:'Prostorový koncept, ne prováděcí projekt · vyber bod pro výšku a podmínky.';
-    const desc={practical:'DOP = návrh vybavení · čela lze odkrýt · koše lze vysunout · Ooni není osazena',light:'L = světlo · typ a ovládání v detailu bodu',interior:'Myčka 45 cm pod troubou · dřez a poloostrov beze změny · původní místo myčky: zásuvky',socket:'Z = připojení · S = vypínač · R01 = rozvaděč · E00 = přívod · ! = nutno posoudit · Z30 STOP',electric:'Vybraný bod ukáže svou větev · vedení podhledem, svisle v instalačních kanálech · Z30 bez trasy',water:'SV plná · TV čárkovaná · odpad tečkovaný → ke stoupačce · SPÁD NEOVĚŘEN',hood:'Varianta končí H02 NEPŘIPOJENA · nejde o napojení na kanalizaci',data:'Datová hvězdice + AV · AC = propojení podle výrobce, nikoli odtok kondenzátu'};
+    svcDetail.textContent=selected?selected.label+' · výška '+selected.xyz[2].toFixed(2)+' m':'';
+    const desc={practical:'Vybavení',light:'L = světlo',interior:'',socket:'Z = zásuvka · S = vypínač · R = rozvaděč',electric:'Elektrické okruhy',water:'SV = studená voda · TV = teplá voda · tečkovaně = odpad',hood:'Trasa odtahu',data:'Datové a AV propojení'};
     svcLegend.textContent=desc[svcLayer.value];
     if(svcLayer.value!=='interior'){
       const palette={practical:'--viz-series-3',electric:'--viz-series-1',cold:'--viz-series-1',hot:'--viz-series-2',waste:'--viz-series-3',hood:'--viz-series-4',data:'--viz-series-5',light:'--viz-series-2',socket:'--viz-series-1',switch:'--viz-series-5',board:'--viz-series-4',marker:'--viz-series-4'};
@@ -187,36 +186,6 @@ canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};canvas.
 canvas.addEventListener('pointermove',e=>{if(!drag)return;az-=(e.clientX-drag.x)*.008;el=Math.max(-.3,Math.min(1.57,el+(e.clientY-drag.y)*.006));drag={x:e.clientX,y:e.clientY};draw();});
 const release=()=>{drag=null;canvas.style.cursor='grab';};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
 canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.65,Math.min(1.8,zoom*Math.exp(-e.deltaY*.001)));draw();},{passive:false});
-root.querySelector('[data-view="iso"]').onclick=()=>{az=-.70;el=.90;zoom=1;focus=false;ceiling.checked=false;draw();};
-root.querySelector('[data-view="plan"]').onclick=()=>{az=-Math.PI/2;el=Math.PI/2;zoom=1;focus=false;draw();};
-root.querySelector('[data-view="kitchen"]').onclick=()=>{az=1.90;el=.50;zoom=1;focus=true;kitchen.checked=true;ceiling.checked=false;draw();};
-root.querySelector('[data-view="rear"]').onclick=()=>{az=1.90;el=-.25;zoom=1;focus='ceiling';ceiling.checked=true;draw();};
-root.querySelector('[data-view="cinema"]').onclick=()=>{az=1.80;el=.30;zoom=1;focus='cinema';ceiling.checked=false;screen.checked=true;draw();};
-root.querySelector('[data-view="corner"]').onclick=()=>{az=.65;el=.40;zoom=1;focus='corner';ceiling.checked=false;screen.checked=false;openDW.checked=false;draw();};
-const bathButton=root.querySelector('[data-view="bath"]');if(bathButton)bathButton.onclick=()=>{az=-.85;el=.72;zoom=1;focus='bath';ceiling.checked=false;draw();};
-const acButton=root.querySelector('[data-view="ac"]'),balconyButton=root.querySelector('[data-view="balcony"]');
-    if(acButton)acButton.onclick=()=>{focus=false;az=-Math.PI/2;el=Math.PI/2;zoom=1;hvac.checked=true;ceiling.checked=false;cut.checked=true;draw();};
-    if(balconyButton)balconyButton.onclick=()=>{focus='balcony';az=-2.60;el=.40;zoom=1;hvac.checked=false;ceiling.checked=false;cut.checked=false;shutters.checked=true;draw();};
-    hvac.onchange=draw;shutters.onchange=draw;
-    root.querySelector('[data-view="iso"]').onclick=()=>{focus=false;az=-.85;el=.95;zoom=1;hvac.checked=false;ceiling.checked=false;cut.checked=true;draw();};
-    svcLayer.onchange=()=>{populatePoints();focus=false;zoom=1;hvac.checked=false;ceiling.checked=false;cut.checked=true;if(svcLayer.value==='interior'){az=-.85;el=.95;}else{az=-Math.PI/2;el=Math.PI/2;}draw();};
-    svcPoint.onchange=()=>{
-      const p=svc.points.find(p=>p.id===svcPoint.value);
-      if(svcLayer.value==='practical'&&p){
-        if(p.room==='BA'){focus='balcony';az=-2.60;el=.40;zoom=1;}
-        else if(['SA','CH'].includes(p.room)){focus='entry';az=-.70;el=.60;zoom=1;}
-        else if(['PR','PO','LO'].includes(p.room)){focus={PR:'office',PO:'children',LO:'bedroom'}[p.room];az=roomViews[focus].a;el=roomViews[focus].e;zoom=1;}else if(p.room==='OB'){focus=true;az=1.90;el=.50;zoom=1;}
-        else if(p.room==='KO'){focus='bath';az=-.85;el=.72;zoom=1;}
-      }draw();
-    };
-    root.querySelector('[data-view="dw"]').onclick=()=>{az=1.40;el=.48;zoom=1;focus='dw';svcLayer.value='interior';populatePoints();openDW.checked=true;ceiling.checked=false;hvac.checked=false;draw();};
-root.querySelector('[data-view="entry"]').onclick=()=>{focus='entry';az=-.70;el=.60;zoom=1;svcLayer.value='practical';populatePoints();ceiling.checked=false;cut.checked=true;draw();};
-doorControl.onchange=()=>{if(doorControl.checked)screen.checked=false;draw();};
-keyboard.onchange=()=>{focus='office';az=roomViews.office.a;el=roomViews.office.e;zoom=1;svcLayer.value='interior';populatePoints();draw();};
- laundry.onchange=()=>{focus='entry';az=-.70;el=.60;zoom=1;draw();};
- bins.onchange=draw;inspect.onchange=draw;
- for(const key of Object.keys(roomViews))root.querySelector('[data-view="'+key+'"]').onclick=()=>{focus=key;az=roomViews[key].a;el=roomViews[key].e;zoom=1;ceiling.checked=false;cut.checked=true;svcLayer.value='interior';populatePoints();draw();};
- cut.onchange=draw;kitchen.onchange=draw;openDW.onchange=draw;ceiling.onchange=draw;screen.onchange=draw;
 // Runs inside the original renderer closure. Model geometry is unchanged.
 Object.assign(roomViews, {
   living:{b:[0,0,5.87,3.45],c:[2.94,1.72,1.1],a:-.85,e:.8,room:'OB'},
@@ -241,9 +210,11 @@ function selectRoom(key,plan=false){
 window.apartmentUI={select:selectRoom,zoom(factor){zoom=Math.max(.55,Math.min(2.5,zoom*factor));draw();}};
 svcLayer.onchange=()=>{populatePoints();ceiling.checked=false;draw();};
 svcPoint.onchange=draw;
+cut.onchange=draw;kitchen.onchange=draw;openDW.onchange=draw;ceiling.onchange=draw;
+hvac.onchange=draw;shutters.onchange=draw;bins.onchange=draw;inspect.onchange=draw;
+doorControl.onchange=()=>{if(doorControl.checked)screen.checked=false;draw();};
 keyboard.onchange=draw;laundry.onchange=draw;
 screen.onchange=()=>{if(screen.checked)doorControl.checked=false;draw();};
-root.querySelectorAll('[data-view]').forEach(button=>{const original=button.onclick;if(original)button.onclick=()=>{activeRoom=null;populatePoints();original();};});
 canvas.addEventListener('keydown',e=>{
  if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-','0'].includes(e.key))return;
  e.preventDefault();
@@ -259,16 +230,16 @@ draw();
 })();
 </script><script>(() => {
   const rooms = {
-    all: {name:'Celý byt', title:'Všechno na jednom místě', text:'Vyber místnost vlevo. Zobrazí se samostatně, spolu s vybavením a poznámkami k návrhu.', materials:[['Dub','#bf9567'],['Sklo','#a5c0c4'],['Kámen','#8f9494']], items:['Obývák s kuchyní a promítáním','Pracovna s hudebním koutem','Dětský pokoj a ložnice','Nové jádro, šatna a úložné prostory'], note:'Model zachovává náš půdorys. Výšky, kování a technické trasy musí před realizací potvrdit zaměření a projekt.'},
-    living: {name:'Obývák a kuchyň', title:'Vaření, hudba a odpočinek', text:'Kuchyň s poloostrovem navazuje na jídelní stůl a sedačku. Luxfery zůstávají pouze na jednom zakončení.', materials:[['Dub','#bf9567'],['Luxfery','#aac5c5'],['Světlá deska','#d8d5cc']], items:['Trouba ve vysoké skříni mezi dřezem a lednicí','Myčka 45 cm u dřezu; výsuvné koše pod dřezem','Rohová sedačka, stolek a lampa na čtení','Projektor na polici, nástěnné plátno, gramofon a repro','Police s rostlinami a obrázky'], note:'Myčka pod troubou je zatím pouze prostorová varianta. Kombinaci spotřebičů a digestoř je nutné ověřit. Stažené plátno zasahuje do průchodu.'},
-    office: {name:'Pracovna', title:'Práce mezi knihami a kytkami', text:'Dva pracovní stoly a hudební kout. Akustické lamely pokračují i pod klimatizací.', materials:[['Dubové lamely','#ae8056'],['Zeleň','#5c7753'],['Světlé stěny','#dfdfd9']], items:['Stoly s monitory, notebooky a pracovním vybavením','Vícepatrové police na knihy a rostliny','Gauč nebo varianta s keyboardem a lavicí','Místo na kytaru, trumpetu a stojánek','Obrazy a jednoduché police na protější stěně'], note:'Keyboard nahrazuje gauč, není navíc. Kotvení polic, hmotnost květin a volný prostor kolem klimatizace je třeba ověřit.'},
-    children: {name:'Dětský pokoj', title:'Místo pro dva', text:'Dvě místa na spaní i učení, doplněná úložným nábytkem.', materials:[['Dřevo','#c2a477'],['Světlé plochy','#dddcd4']], items:['Dvě postele a dva pracovní stoly','Monitory, notebooky a stolní osvětlení','Šatní skříň a menší skříňka','Police na volné stěně a nad postelemi'], note:'Police nad postelemi vyžadují spolehlivé kotvení. Těžké předměty patří raději do spodních skříněk.'},
-    bedroom: {name:'Ložnice', title:'Klidnější část bytu', text:'Dvoulůžko a skříň kombinující uzavřenou polovinu s otevřenými policemi.', materials:[['Dub','#b9956e'],['Textil','#b9b3a8']], items:['Dvoulůžko s matrací a nočními stolky','Skříň: polovina s posuvnými čely, polovina otevřená','Velký obraz za postelí','Nástěnná klimatizace a venkovní roleta'], note:'Skříň je mělká, přibližně 37 cm. Průchod u postele má jen asi 51–55 cm; uspořádání je potřeba před výrobou ještě ověřit.'},
-    bath: {name:'Koupelna', title:'Šedý kámen a světlo přes sklo', text:'Nová koupelna se zvýšenou sprchovou plochou o 10 cm přes celou její délku.', materials:[['Šedý obklad','#929594'],['Luxfery','#bad0cf']], items:['Luxferová stěna až ke stropu, přibližně do poloviny místnosti','Sprchová plocha končí zároveň s luxferovou stěnou','Odtokový žlab u stěny s umyvadlem','Umyvadlo se zrcadlem a skříňkou','Pračka, horní skříňky a elektrické topení naproti sprchovým bateriím'], note:'Výška odpadů a spád nejsou ověřené. Hydroizolaci, topení a elektrické zóny musí posoudit projektant a elektrikář.'},
-    wc: {name:'WC', title:'Samostatné WC', text:'Součást nového bytového jádra. Stoupačky jsou za WC.', materials:[['Šedý obklad','#929594'],['Bílá sanita','#ededeb']], items:['WC v samostatné místnosti','Přístup k instalační šachtě','Navržené osvětlení a přívody'], note:'Revizní přístup ke stoupačkám musí zůstat dostupný. Větrání není automaticky schválenou cestou pro digestoř.'},
-    wardrobe: {name:'Šatna', title:'Všechno má svoje místo', text:'Úložné prostory za vstupními dveřmi, s oddílem na prádlo i úklid.', materials:[['Světlé korpusy','#deded5'],['Dřevo','#bfa079']], items:['Vysoká skříň na oblečení a další věci','Mělký botník na protější straně','Výsuvný koš na prádlo a police','Úklidový oddíl pro vysavač, prostředky a žehlicí prkno','Rozvaděč nad botníkem'], note:'U botníku zbývá přibližně 75 cm průchodu. Přístup a pracovní prostor před rozvaděčem musí odsouhlasit elektrikář.'},
-    hall: {name:'Chodba a vstup', title:'Volný průchod bytem', text:'Propojení jednotlivých místností se vstupem do šatny.', materials:[['Dřevo','#baa184'],['Světlé stěny','#e0dfd9']], items:['Vstupní a interiérové dveře','Zrcadlo a odkládací místo na klíče','Osvětlení a vypínače u průchodů'], note:'Směry otevírání dveří jsou návrhové. Současné otevírání a průchozí šířky vyžadují ověření na místě.'},
-    balcony: {name:'Lodžie', title:'Navazuje na pracovnu', text:'Venkovní prostor s návrhem umístění klimatizační jednotky.', materials:[['Světlé plochy','#c9cbc7'],['Kov','#606970']], items:['Venkovní jednotka vlevo nahoře při pohledu zvenku','Napojení čtyř nástěnných klimatizací','Návrh venkovních rolet'], note:'Pec Ooni není osazena: bezpečné odstupy nejsou v návrhu splněné. Kotvení klimatizace, kondenzát a zásah do fasády zůstávají k dořešení.'}
+    all: {name:'Celý byt', title:'Všechno na jednom místě', text:'Vyber místnost vlevo. Zobrazí se samostatně, spolu s přehledem vybavení.', materials:[['Dub','#bf9567'],['Sklo','#a5c0c4'],['Kámen','#8f9494']], items:['Obývák s kuchyní a promítáním','Pracovna s hudebním koutem','Dětský pokoj a ložnice','Nové jádro, šatna a úložné prostory']},
+    living: {name:'Obývák a kuchyň', title:'Vaření, hudba a odpočinek', text:'Kuchyň s poloostrovem navazuje na jídelní stůl a sedačku. Luxfery zůstávají pouze na jednom zakončení.', materials:[['Dub','#bf9567'],['Luxfery','#aac5c5'],['Světlá deska','#d8d5cc']], items:['Trouba ve vysoké skříni mezi dřezem a lednicí','Myčka 45 cm u dřezu; výsuvné koše pod dřezem','Rohová sedačka, stolek a lampa na čtení','Projektor na polici, nástěnné plátno, gramofon a repro','Police s rostlinami a obrázky']},
+    office: {name:'Pracovna', title:'Práce mezi knihami a kytkami', text:'Dva pracovní stoly a hudební kout. Akustické lamely pokračují i pod klimatizací.', materials:[['Dubové lamely','#ae8056'],['Zeleň','#5c7753'],['Světlé stěny','#dfdfd9']], items:['Stoly s monitory, notebooky a pracovním vybavením','Vícepatrové police na knihy a rostliny','Gauč nebo varianta s keyboardem a lavicí','Místo na kytaru, trumpetu a stojánek','Obrazy a jednoduché police na protější stěně']},
+    children: {name:'Dětský pokoj', title:'Místo pro dva', text:'Dvě místa na spaní i učení, doplněná úložným nábytkem.', materials:[['Dřevo','#c2a477'],['Světlé plochy','#dddcd4']], items:['Dvě postele a dva pracovní stoly','Monitory, notebooky a stolní osvětlení','Šatní skříň a menší skříňka','Police na volné stěně a nad postelemi']},
+    bedroom: {name:'Ložnice', title:'Klidnější část bytu', text:'Dvoulůžko a skříň kombinující uzavřenou polovinu s otevřenými policemi.', materials:[['Dub','#b9956e'],['Textil','#b9b3a8']], items:['Dvoulůžko s matrací a nočními stolky','Skříň: polovina s posuvnými čely, polovina otevřená','Velký obraz za postelí','Nástěnná klimatizace a venkovní roleta']},
+    bath: {name:'Koupelna', title:'Šedý kámen a světlo přes sklo', text:'Nová koupelna se zvýšenou sprchovou plochou o 10 cm přes celou její délku.', materials:[['Šedý obklad','#929594'],['Luxfery','#bad0cf']], items:['Luxferová stěna až ke stropu, přibližně do poloviny místnosti','Sprchová plocha končí zároveň s luxferovou stěnou','Odtokový žlab u stěny s umyvadlem','Umyvadlo se zrcadlem a skříňkou','Pračka, horní skříňky a elektrické topení naproti sprchovým bateriím']},
+    wc: {name:'WC', title:'Samostatné WC', text:'Součást nového bytového jádra. Stoupačky jsou za WC.', materials:[['Šedý obklad','#929594'],['Bílá sanita','#ededeb']], items:['WC v samostatné místnosti','Přístup k instalační šachtě','Navržené osvětlení a přívody']},
+    wardrobe: {name:'Šatna', title:'Všechno má svoje místo', text:'Úložné prostory za vstupními dveřmi, s oddílem na prádlo i úklid.', materials:[['Světlé korpusy','#deded5'],['Dřevo','#bfa079']], items:['Vysoká skříň na oblečení a další věci','Mělký botník na protější straně','Výsuvný koš na prádlo a police','Úklidový oddíl pro vysavač, prostředky a žehlicí prkno','Rozvaděč nad botníkem']},
+    hall: {name:'Chodba a vstup', title:'Volný průchod bytem', text:'Propojení jednotlivých místností se vstupem do šatny.', materials:[['Dřevo','#baa184'],['Světlé stěny','#e0dfd9']], items:['Vstupní a interiérové dveře','Zrcadlo a odkládací místo na klíče','Osvětlení a vypínače u průchodů']},
+    balcony: {name:'Lodžie', title:'Navazuje na pracovnu', text:'Venkovní prostor s návrhem umístění klimatizační jednotky.', materials:[['Světlé plochy','#c9cbc7'],['Kov','#606970']], items:['Venkovní jednotka vlevo nahoře při pohledu zvenku','Napojení čtyř nástěnných klimatizací','Návrh venkovních rolet']}
   };
   const $ = s => document.querySelector(s);
   let current='all', plan=false;
@@ -278,7 +249,7 @@ draw();
     current=Object.hasOwn(rooms,location.hash.slice(1))?location.hash.slice(1):'all';
     const r=rooms[current];
     document.title=r.name+' · Náš byt';
-    $('#breadcrumb').textContent=r.name.toLocaleUpperCase('cs');$('#room-title').textContent=r.name;$('#overview-title').textContent=r.title;$('#room-description').textContent=r.text;$('#room-note').textContent=r.note;$('#view-caption').textContent=current==='all'?'Celý byt · revize 20':r.name+' · samostatný pohled';
+    $('#breadcrumb').textContent=r.name.toLocaleUpperCase('cs');$('#room-title').textContent=r.name;$('#overview-title').textContent=r.title;$('#room-description').textContent=r.text;$('#view-caption').textContent=current==='all'?'Celý byt':r.name+' · samostatný pohled';
     nav.querySelectorAll('a').forEach(a=>{if(a.dataset.room===current)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
     $('#furniture-list').replaceChildren(...r.items.map(text=>{const li=document.createElement('li');li.textContent=text;return li;}));
     $('#materials').replaceChildren(...r.materials.map(([name,color])=>{const el=document.createElement('span');el.className='material';const dot=document.createElement('span');dot.className='swatch';dot.style.backgroundColor=color;el.append(dot,document.createTextNode(name));return el;}));
@@ -290,7 +261,6 @@ draw();
   if(!window.apartmentUI){$('#load-status').textContent='Model se nepodařilo načíst. Zkus stránku obnovit.';return;}
   $('#view-3d').onclick=()=>changeMode(false);$('#view-plan').onclick=()=>changeMode(true);$('#reset-view').onclick=()=>changeMode(plan);$('#zoom-in').onclick=()=>window.apartmentUI.zoom(1.15);$('#zoom-out').onclick=()=>window.apartmentUI.zoom(1/1.15);
   window.addEventListener('hashchange',update);
-  document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{$('#view-caption').textContent='Detail · '+b.textContent;$('#view-3d').setAttribute('aria-pressed','false');$('#view-plan').setAttribute('aria-pressed','false');}));
   update();
 })();
 </script></body></html>

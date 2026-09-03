@@ -14,14 +14,18 @@ renderer=renderer.replace("if(inspect.checked&&b.group==='r18_door')continue;","
 renderer=renderer.replace("for(const t of meshTriangles){","for(const t of meshTriangles){if(focus==='hall'&&Math.max(...t.v.map(p=>p[0]))<-.10&&Math.max(...t.v.map(p=>p[1]))<-1.30)continue;");
 // Do not cut a room-view floor or service routes from neighbouring rooms into the view.
 renderer=renderer.replace('const path=r.path.map(project);',"if(activeRoom){const ids=new Set(svc.points.filter(p=>p.room===activeRoom).map(p=>p.id));if(!ids.has(r.start)&&!ids.has(r.end))continue;}const path=r.path.map(project);");
-// Preserve room views while inspecting options; register after the legacy handlers.
+// Remove obsolete camera controls instead of retaining invisible legacy buttons.
+renderer=renderer.replace(/root\.querySelector\('\[data-view="iso"\]'\)\.onclick=[\s\S]*?(?=new ResizeObserver\(draw\))/, '');
+renderer=renderer.replace(",acLegend=root.querySelector('[data-ac-legend]')", '');
+renderer=renderer.replace(' if(acLegend)acLegend.hidden=!hvac.checked;', '');
+renderer=renderer.replace(/    svcDetail\.textContent=[^\n]*/, "    svcDetail.textContent=selected?selected.label+' · výška '+selected.xyz[2].toFixed(2)+' m':'';");
+renderer=renderer.replace(/    const desc=\{[^\n]*\};/, "    const desc={practical:'Vybavení',light:'L = světlo',interior:'',socket:'Z = zásuvka · S = vypínač · R = rozvaděč',electric:'Elektrické okruhy',water:'SV = studená voda · TV = teplá voda · tečkovaně = odpad',hood:'Trasa odtahu',data:'Datové a AV propojení'};");
+// Register the current room controls.
 const anchor='new ResizeObserver(draw).observe(canvas);';
 renderer=renderer.replace(anchor,read('room-adapter.js')+'\n'+anchor);
 // Bound software raster cost on large screens, and allow rendering at native 1x density.
 renderer=renderer.replace('ratio=Math.min(2,Math.max(1.5,window.devicePixelRatio||1))','ratio=Math.min(1.5,window.devicePixelRatio||1)');
-const buttons=[...original.matchAll(/<button[^>]*data-view="([^"]+)"[^>]*>([^<]+)<\/button>/g)].map(([,id,label])=>`<button type="button" data-view="${id}">${label}</button>`).join('');
-// The old loop registers only the three existing room buttons, before adapter views are added.
-let html=read('site-shell.html').replace('__STYLE__',()=>read('site.css')).replace('__LEGACY_BUTTONS__',()=>buttons).replace('__RENDERER__',()=>renderer).replace('__APP__',()=>read('site-app.js'));
+let html=read('site-shell.html').replace('__STYLE__',()=>read('site.css')).replace('__RENDERER__',()=>renderer).replace('__APP__',()=>read('site-app.js'));
 html=html.replace(/[\t ]+$/gm,'');
 for(const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g))new vm.Script(match[1]);
 if(/__[A-Z_]+__/.test(html))throw Error('Unresolved template token');

@@ -22,9 +22,11 @@ function selectRoom(key,plan=false){
 window.apartmentUI={select:selectRoom,zoom(factor){zoom=Math.max(.55,Math.min(2.5,zoom*factor));draw();}};
 svcLayer.onchange=()=>{populatePoints();ceiling.checked=false;draw();};
 svcPoint.onchange=draw;
+cut.onchange=draw;kitchen.onchange=draw;openDW.onchange=draw;ceiling.onchange=draw;
+hvac.onchange=draw;shutters.onchange=draw;bins.onchange=draw;inspect.onchange=draw;
+doorControl.onchange=()=>{if(doorControl.checked)screen.checked=false;draw();};
 keyboard.onchange=draw;laundry.onchange=draw;
 screen.onchange=()=>{if(screen.checked)doorControl.checked=false;draw();};
-root.querySelectorAll('[data-view]').forEach(button=>{const original=button.onclick;if(original)button.onclick=()=>{activeRoom=null;populatePoints();original();};});
 canvas.addEventListener('keydown',e=>{
  if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-','0'].includes(e.key))return;
  e.preventDefault();

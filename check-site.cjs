@@ -1,6 +1,9 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const {createCanvas}=require('@napi-rs/canvas');
 const html=fs.readFileSync(__dirname+'/index.html','utf8');
+assert(!html.includes('data-view='),'Legacy view controls must be removed');
+assert(!html.includes('id="room-note"'),'Working notes must be removed');
+assert(!html.includes('Pracovní návrh'),'Draft badge must be removed');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const model=JSON.parse(fs.readFileSync(__dirname+'/apartment-model.json','utf8'));
 for(const width of [360,900]){
@@ -10,7 +13,7 @@ for(const width of [360,900]){
   const key=data[2]?`[${data[1]}="${data[2]}"]`:`[${data[1]}]`;
   elements.set(key,{checked:/\bchecked\b/.test(attrs),value:data[1]==='data-service-layer'?'interior':'',innerHTML:'',style:{},addEventListener(){}});
  }
- for(const s of ['[data-ac-legend]','[data-service-detail]','[data-service-legend]'])elements.set(s,{textContent:'',hidden:false});
+ for(const s of ['[data-service-detail]','[data-service-legend]'])elements.set(s,{textContent:'',hidden:false});
  const canvas=createCanvas(width,380);canvas.clientWidth=width;canvas.clientHeight=380;canvas.style={};canvas.addEventListener=(k,v)=>events[k]=v;canvas.setPointerCapture=()=>{};
  elements.set('canvas',canvas);
  const root={querySelector:s=>{assert(elements.has(s),'Missing UI element '+s);return elements.get(s);},querySelectorAll:()=>[...elements].filter(([s])=>s.startsWith('[data-view=')).map(([,el])=>el)};
@@ -29,7 +32,6 @@ for(const width of [360,900]){
  layer.value='interior';layer.onchange();
  for(const name of ['keyboard','laundry','bins','inspect','open','ceiling','screen','doors','hvac','shutters']){const el=elements.get('[data-'+name+']');el.checked=true;el.onchange();el.checked=false;el.onchange();}
  api.select('all');events.keydown({key:'ArrowLeft',preventDefault(){}});api.zoom(1.15);
- for(const [selector,button] of elements)if(selector.startsWith('[data-view=')){assert.equal(typeof button.onclick,'function',selector);button.onclick();}
- console.log(width+': 10 rooms, 3D/plan, room-scoped points, all toggles and legacy views OK');
+ console.log(width+': 10 rooms, 3D/plan, room-scoped points, all toggles OK');
 }
 console.log('Model geometry preserved, source templates resolved, scripts parse.');
