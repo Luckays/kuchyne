@@ -1,4 +1,4 @@
-// Final compact wardrobe: two end bays, no side cabinets or legacy floating shelves.
+// Full-height L-shaped clothing cabinet and a separate utility bay.
 module.exports=function wardrobeLayout(model){
  model.boxes=model.boxes.filter(b=>! /^(Satna |Pradlo |Vysavac |Zehlici prkno|Uklid |Botnik )/.test(b.name));
  const add=(name,min,max,color='#c99e6b',group='r18_furniture',extra={})=>model.boxes.push({name,min,max,color,group,side:'',...extra});
@@ -10,6 +10,10 @@ module.exports=function wardrobeLayout(model){
  add('Satna obleceni zada',[-1.082,-3.57,.10],[-.168,-3.552,2.38],'#d9d8cf');
  add('Satna tyc bundy',[-1.05,-3.29,1.79],[-.20,-3.265,1.815],'#53615d');
  add('Satna horni police',[-1.08,-3.55,2.08],[-.17,-2.99,2.10]);
+ // Shallow return joins the hanging bay at a right angle, open toward the aisle.
+ add('Satna rohove kridlo zada',[-1.10,-2.97,.08],[-1.082,-2.40,2.40]);
+ add('Satna rohove kridlo bocnice',[-1.10,-2.418,.08],[-.80,-2.40,2.40]);
+ for(const z of [.08,.48,.88,1.28,1.68,2.08,2.382])add('Satna rohove kridlo police '+z,[-1.10,-2.97,z],[-.80,-2.40,z+.018]);
  for(const [i,x] of [-.96,-.71,-.46].entries()){
   add('Satna raminko '+i,[x-.008,-3.50,1.72],[x+.008,-3.06,1.735],'#b9956e');
   add('Satna zaves raminka '+i,[x-.008,-3.285,1.73],[x+.008,-3.27,1.80],'#53615d');
@@ -46,7 +50,13 @@ module.exports=function wardrobeLayout(model){
   if(m.name==='Byt Zeď_19 0-0'&&p[1]>-2.30)p[1]+=dy;
   if(m.name==='Byt Zeď_19 1-0'&&p[1]<-1.40)p[1]+=dy;
  }
- model.cleaning_access={central_area:[[-1.10,-2.97],[-.15,-1.74]],width_m:.95,length_m:1.23};
+ model.cleaning_access={central_area:[[-.80,-2.97],[-.15,-1.74]],width_m:.65,length_m:1.23,wardrobe_shape:'L'};
+ // The return must not cover the electrical board. Relocate it onto the clear west wall.
+ for(const [id,xyz] of [['R01',[-1.045,-2.065,1.55]],['Z27',[-1.045,-2.10,2.11]],['Z40',[-1.045,-1.84,2.11]]]){
+  const p=model.services.points.find(p=>p.id===id),delta=xyz.map((v,i)=>v-p.xyz[i]);p.xyz=xyz;
+  for(const b of model.boxes.filter(b=>b.name.startsWith(id+' ')))for(let i=0;i<3;i++){b.min[i]+=delta[i];b.max[i]+=delta[i];}
+  for(const r of model.services.routes){if(r.end===id)r.path[r.path.length-1]=xyz.slice();if(r.start===id)r.path[0]=xyz.slice();}
+ }
  // Keep socket position and routing attached to the relocated vacuum dock.
  for(const [id,xyz] of [['Z41',[-.30,-1.38,1.32]],['S08',[-.16,-2.63,1.1]]]){
   const p=model.services.points.find(p=>p.id===id);const delta=xyz.map((v,i)=>v-p.xyz[i]);p.xyz=xyz;

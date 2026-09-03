@@ -7,6 +7,7 @@ const model=require('./model-updates.cjs')(JSON.parse(read('apartment-model.json
 if(model.version!==20)throw Error('Review adapter before changing model revision');
 const original=read('apartment-viewer.html');
 let renderer=original.match(/<script>([\s\S]*?)<\/script>/)[1];
+renderer=renderer.replace("if(el>1.5&&b.group!=='floor'", "if(cut.checked&&b.group==='wc_wall'){c[2]=Math.min(c[2],.35);if(c[2]<=a[2])continue;}\n   if(el>1.5&&b.group!=='floor'");
 renderer=renderer.replace('const opened=openDW.checked',"if(glazing.checked&&b.assembly==='loggia_panel')for(const p of v)for(let i=0;i<3;i++)p[i]+=b.slide[i];\nconst opened=openDW.checked");
 renderer=renderer.replace("kitchen=root.querySelector('[data-kitchen]')","kitchen={checked:true}");
 renderer=renderer.replace('a[1]-=.35;c[1]-=.35;','a[1]+=model.laundry_slide;c[1]+=model.laundry_slide;');

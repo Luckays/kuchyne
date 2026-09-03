@@ -245,6 +245,21 @@ module.exports = function updateModel(model) {
  // Same 60 cm tile format and stone palette as the bathroom.
  const bathTiles=model.boxes.filter(b=>b.name.startsWith('Koupelna kamen podlaha'));
  model.boxes.filter(b=>b.name.startsWith('WC seda dlazba')).forEach((b,i)=>{b.color=bathTiles[i].color;b.material='bathroom-grey-stone';});
+ // WC interior walls: copy the bathroom stone palette, 600 mm modules and 2 mm joints.
+ const stone=['#8d9090','#989a99','#858988','#929694'];
+ const tiledWall=(label,axis,plane,start,end,z0=0,z1=2.48)=>{
+  for(let u=start,i=0;u<end;u+=.60,i++)for(let z=z0,j=0;z<z1;z+=.60,j++){
+   const a=axis===0?[plane,u+.001,z+.001]:[u+.001,plane,z+.001];
+   const c=axis===0?[plane+.008,Math.min(u+.599,end),Math.min(z+.599,z1)]:[Math.min(u+.599,end),plane+.008,Math.min(z+.599,z1)];
+   add('WC kamen obklad '+label+' '+i+'-'+j,a,c,stone[(i*3+j)%stone.length],'wc_wall');
+  }
+ };
+ tiledWall('zapad',0,1.305,-3.550,-2.651);
+ tiledWall('vychod',0,2.416,-3.550,-2.651);
+ tiledWall('zadni',1,-3.550,1.313,2.416);
+ tiledWall('vstup vlevo',1,-2.659,1.313,1.3427);
+ tiledWall('vstup vpravo',1,-2.659,2.1428,2.416);
+ tiledWall('nad dvermi',1,-2.659,1.3427,2.1428,1.981);
  const mirror=model.boxes.find(b=>b.name==='D07 zrcadlo chodba');
  mirror.min=[1.185,-1.30,.28];mirror.max=[1.192,-.70,2.00];
  const mirrorInfo=model.finishing.items.find(p=>p.id==='D07');if(mirrorInfo)mirrorInfo.xyz=[1.1885,-1.0,1.14];
