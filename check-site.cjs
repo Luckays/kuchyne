@@ -7,6 +7,17 @@ assert(!html.includes('Pracovní návrh'),'Draft badge must be removed');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const model=require('./model-updates.cjs')(JSON.parse(fs.readFileSync(__dirname+'/apartment-model.json','utf8')));
 const wcDoor=model.doors.items.find(d=>d.id==='DV7');
+const bedroomDoor=model.doors.items.find(d=>d.id==='DV3');
+assert.equal(bedroomDoor.type,'wall_slide');assert.equal(bedroomDoor.angle,0);
+const bedroomLeaf=model.boxes.find(b=>b.name==='DV3 Loznice posuvne kridlo');
+assert(bedroomLeaf.max[1]<-.15,'Leaf must stay inside bedroom');
+assert(bedroomLeaf.max[0]+bedroomDoor.slide[0]<5.87,'Open leaf fits before room corner');
+assert(bedroomLeaf.min[0]+bedroomDoor.slide[0]>bedroomDoor.opening[1][0],'Open leaf clears doorway');
+const swept={min:bedroomLeaf.min,max:bedroomLeaf.max.map((v,i)=>v+bedroomDoor.slide[i])};
+for(const unit of model.boxes.filter(b=>b.name.startsWith('Nastenna klimatizace Loznice'))){
+ assert(![0,1,2].every(i=>unit.min[i]<swept.max[i]&&unit.max[i]>swept.min[i]),'AC must clear door travel');
+}
+assert.deepEqual(model.services.routes.find(r=>r.id==='AC-LO').path.at(-1),model.services.points.find(p=>p.id==='K-LO').xyz);
 assert.equal(wcDoor.type,'pocket');assert.equal(wcDoor.angle,0);
 for(const box of model.boxes.filter(b=>b.door_id==='DV7')){
  assert(box.min[0]+wcDoor.slide[0]>=wcDoor.pocket_bounds[0][0]);
@@ -33,6 +44,10 @@ for(const width of [360,900]){
   api.select(room,true);
  }
  assert(fingerprints.size>=9,'Room images should differ');
+ api.select('bedroom',false);const shut=canvas.toBuffer('image/png');
+ elements.get('[data-doors]').checked=true;elements.get('[data-doors]').onchange();
+ assert(!canvas.toBuffer('image/png').equals(shut),'Bedroom slider must change the rendered view');
+ elements.get('[data-doors]').checked=false;elements.get('[data-doors]').onchange();
  api.select('office',false);const layer=elements.get('[data-service-layer]');layer.value='socket';layer.onchange();
  const options=elements.get('[data-service-point]').innerHTML;
  const ids=[...options.matchAll(/value="([^"]+)"/g)].map(m=>m[1]);assert(ids.length>0);for(const id of ids)assert.equal(model.services.points.find(p=>p.id===id)?.room,'PR');
