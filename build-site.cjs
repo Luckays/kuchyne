@@ -14,6 +14,9 @@ renderer=renderer.replace('a[1]-=.35;c[1]-=.35;','a[1]+=model.laundry_slide;c[1]
 renderer=renderer.replace('const opened=openDW.checked',"if(cleaning.checked&&b.assembly==='cleaning_door'){const [hx,hy]=b.hinge,ang=b.open_angle*Math.PI/180;for(const p of v){const x=p[0]-hx,y=p[1]-hy;p[0]=hx+x*Math.cos(ang)-y*Math.sin(ang);p[1]=hy+x*Math.sin(ang)+y*Math.cos(ang);}}\nconst opened=openDW.checked");
 renderer=renderer.replace('if(door)n=',"if(cleaning.checked&&b.assembly==='cleaning_door'){const ang=b.open_angle*Math.PI/180;n=[n[0]*Math.cos(ang)-n[1]*Math.sin(ang),n[0]*Math.sin(ang)+n[1]*Math.cos(ang),n[2]];}if(door)n=");
 renderer=renderer.replace('const model=__MODEL_JSON__;','const model='+JSON.stringify(model).replace(/</g,'\\u003c')+';');
+renderer=renderer.replace("if(b.group==='shutter_curtain'&&!shutters.checked)continue;","if(b.hidden)continue;if(b.group==='shutter_curtain'&&!shutters.checked)continue;");
+renderer=renderer.replace("return [w/2+(q[0]-(x0+x1)/2)*scale,h/2+(q[1]-(y0+y1)/2)*scale,q[2]];","return [w/2+(q[0]-(x0+x1)/2)*scale+panX,h/2+(q[1]-(y0+y1)/2)*scale+panY,q[2]];");
+renderer=renderer.replace("az-=(e.clientX-drag.x)*.008;el=Math.max(-.3,Math.min(1.57,el+(e.clientY-drag.y)*.006));drag={x:e.clientX,y:e.clientY};draw();","const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(panMode){panX+=dx;panY+=dy;}else{az-=dx*.008;el=Math.max(-.3,Math.min(1.57,el+dy*.006));}drag={x:e.clientX,y:e.clientY};draw();");
 // The retained hood is deeper than the new ceiling cavity: show its projecting casing.
 renderer=renderer.replace("['LuxeAir navrh tela','Platno zapustene pouzdro']","['Platno zapustene pouzdro']");
 renderer=renderer.replace('if(door){const [hx,hy]=door.hinge;',"if(door?.type==='wall_slide'){for(const p of v)for(let axis=0;axis<3;axis++)p[axis]+=door.slide[axis];}else if(door){const [hx,hy]=door.hinge;");

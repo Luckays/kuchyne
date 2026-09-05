@@ -7,6 +7,9 @@ assert(!html.includes('Pracovní návrh'),'Draft badge must be removed');
 assert(!html.includes('data-kitchen'),'Furniture hiding control removed');
 assert(!html.includes('id="furniture-list"'),'Room overview removed');
 assert(html.includes('class="layer-card"'),'Right-side layer panel exists');
+assert(html.includes('data-pan-mode'),'Pan control exists');
+assert(html.includes('Stáhnout vnitřní rolety'));
+assert(!html.includes('Stáhnout venkovní rolety'));
 const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
 const model=require('./model-updates.cjs')(JSON.parse(fs.readFileSync(__dirname+'/apartment-model.json','utf8')));
 const wcDoor=model.doors.items.find(d=>d.id==='DV7');
@@ -41,6 +44,12 @@ assert(2.48-acBody.max[2]>.09);
 assert(model.doors.items.every(d=>d.clear_height_m===1.95));
 assert.equal(model.boxes.filter(b=>b.name.startsWith('Radiator ')).length,4);
 assert.equal(model.boxes.filter(b=>b.name.startsWith('Kastlik topeni ')).length,4);
+assert.equal(model.blinds.type,'interior roller blinds');
+assert(!model.boxes.some(b=>b.name.startsWith('Roleta ')));
+assert(model.boxes.filter(b=>b.group==='shutter'&&b.name.includes('vodici lista')).every(b=>b.hidden));
+assert(model.boxes.filter(b=>b.group==='shutter_curtain'&&/Obyvak|Loznice/.test(b.name)).every(b=>b.max[0]<5.87));
+assert(model.boxes.filter(b=>b.group==='shutter_curtain'&&/Pokoj|Detsky/.test(b.name)).every(b=>b.min[0]>-4.73));
+assert(model.boxes.filter(b=>b.group==='shutter_curtain'&&/Pracovna|balkonove/.test(b.name)).every(b=>b.min[0]>-3.60));
 for(const b of model.boxes.filter(b=>b.group==='ceiling'))assert(Math.abs(b.min[2]-2.48)<1e-8);
 assert.equal(model.boxes.filter(b=>b.name.startsWith('Podhled 12 cm')).length,8);
 const bedroomDoor=model.doors.items.find(d=>d.id==='DV3');
@@ -94,7 +103,7 @@ for(const width of [360,900]){
  const ids=[...options.matchAll(/value="([^"]+)"/g)].map(m=>m[1]);assert(ids.length>0);for(const id of ids)assert.equal(model.services.points.find(p=>p.id===id)?.room,'PR');
  layer.value='interior';layer.onchange();
  for(const name of ['keyboard','laundry','bins','inspect','open','ceiling','screen','doors','hvac','shutters','cleaning','glazing']){const el=elements.get('[data-'+name+']');el.checked=true;el.onchange();el.checked=false;el.onchange();}
- api.select('all');events.keydown({key:'ArrowLeft',preventDefault(){}});api.zoom(1.15);
+ api.select('all');const beforePan=canvas.toBuffer('image/png');api.pan(true);events.pointerdown({clientX:100,clientY:100,pointerId:1});events.pointermove({clientX:125,clientY:115});events.pointerup();assert(!canvas.toBuffer('image/png').equals(beforePan),'Pan must move the rendered view');api.pan(false);events.keydown({key:'ArrowLeft',preventDefault(){}});api.zoom(1.15);
  console.log(width+': 10 rooms, 3D/plan, room-scoped points, all toggles OK');
 }
 console.log('Model geometry preserved, source templates resolved, scripts parse.');

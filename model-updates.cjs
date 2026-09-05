@@ -266,5 +266,20 @@ module.exports = function updateModel(model) {
  // Left end of the office sofa as viewed facing its wall, away from the AC.
  transform('Kytara',p=>[-p[1]-.09,p[0]+5.53,p[2]-.15]);
  model.boxes=model.boxes.filter(b=>!/^Pracovna obraz .* 0$/.test(b.name));
- return require('./wardrobe-layout.cjs')(model);
+ model=require('./wardrobe-layout.cjs')(model);
+ // Interior fabric roller blinds on the room side of each opening.
+ for(const b of model.boxes){
+  if(b.group!=='shutter'&&b.group!=='shutter_curtain')continue;
+  const oldName=b.name||'';
+  b.name=oldName.replace(/^Roleta /,'Vnitrni roleta ');
+  if(oldName.includes('vodici lista'))b.hidden=true;
+  let axis=null;
+  if(oldName.startsWith('Roleta Obyvak')||oldName.startsWith('Roleta Loznice'))axis=6;
+  else if(oldName.startsWith('Roleta Pokoj')||oldName.startsWith('Roleta Detsky'))axis=-4.87;
+  else if(oldName.startsWith('Roleta Pracovna')||oldName.startsWith('Roleta balkonove'))axis=-3.74;
+  if(axis!==null){const lo=2*axis-b.max[0],hi=2*axis-b.min[0];b.min[0]=lo;b.max[0]=hi;}
+  b.color=b.group==='shutter_curtain'?(Math.round(b.min[2]*100)%2?'#ded9cf':'#d7d1c5'):'#c9c5bc';
+ }
+ model.blinds={type:'interior roller blinds',side:'room',control:'shared visibility toggle'};
+ return model;
 };

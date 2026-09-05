@@ -1,6 +1,8 @@
 // Shared geometry for all room views.
 const cleaning=root.querySelector('[data-cleaning]');
 const glazing=root.querySelector('[data-glazing]');
+const panControl=root.querySelector('[data-pan-mode]');
+let panMode=false,panX=0,panY=0;
 glazing.onchange=()=>draw();
 function clipRoomPolygon(vertices,bounds,pad){
  let result=vertices;
@@ -28,11 +30,11 @@ function roomFloor(rv){
 let selectedRoom='all', selectedPlan=false;
 function selectRoom(key,plan=false){
  selectedRoom=key;selectedPlan=plan;activeRoom=key==='all'?null:roomViews[key]?.room;
- focus=key==='all'?false:key;zoom=1;
+ focus=key==='all'?false:key;zoom=1;panX=0;panY=0;
  const rv=roomViews[key];az=plan?-Math.PI/2:(rv?.a??-.85);el=plan?Math.PI/2:(rv?.e??.95);
  populatePoints();draw();
 }
-window.apartmentUI={select:selectRoom,reset(){ceiling.checked=false;hvac.checked=false;cut.checked=true;},zoom(factor){zoom=Math.max(.55,Math.min(2.5,zoom*factor));draw();}};
+window.apartmentUI={select:selectRoom,pan(enabled){panMode=enabled;canvas.style.cursor=enabled?'move':'grab';},reset(){ceiling.checked=false;hvac.checked=false;cut.checked=true;panX=0;panY=0;draw();},zoom(factor){zoom=Math.max(.55,Math.min(2.5,zoom*factor));draw();}};
 svcLayer.onchange=()=>{populatePoints();draw();};
 svcPoint.onchange=draw;
 cut.onchange=draw;cleaning.onchange=draw;openDW.onchange=draw;ceiling.onchange=draw;
@@ -43,6 +45,7 @@ screen.onchange=()=>{if(screen.checked)doorControl.checked=false;draw();};
 canvas.addEventListener('keydown',e=>{
  if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-','0'].includes(e.key))return;
  e.preventDefault();
+ if(panMode&&e.key.startsWith('Arrow')){if(e.key==='ArrowLeft')panX-=20;if(e.key==='ArrowRight')panX+=20;if(e.key==='ArrowUp')panY-=20;if(e.key==='ArrowDown')panY+=20;draw();return;}
  if(e.key==='ArrowLeft')az-=.15;if(e.key==='ArrowRight')az+=.15;
  if(e.key==='ArrowUp')el=Math.min(1.57,el+.12);if(e.key==='ArrowDown')el=Math.max(-.3,el-.12);
  if(e.key==='+'||e.key==='=')zoom=Math.min(2.5,zoom*1.15);if(e.key==='-')zoom=Math.max(.55,zoom/1.15);
